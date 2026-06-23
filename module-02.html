@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Module 2: Powers & Duties of LPWs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F9F5F0; --panel:#FFFFFF; --panel-2:#F0F5ED; --grid:#E8DFD7;
+  --text:#1F2937; --text-dim:#6B7280; --text-dimmer:#9CA3AF;
+  --accent:#8B5A2B; --accent-dim:#6B4423; --good:#059669; --bad:#DC2626;
+}
+*{box-sizing:border-box;}
+html,body{margin:0; background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; font-size:17px; line-height:1.6;}
+
+.app{max-width:480px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column;}
+header{display:flex; align-items:center; gap:10px; padding:16px 16px 12px; position:sticky; top:0; background:var(--bg); z-index:5; border-bottom:1px solid var(--grid);}
+.back-btn{background:var(--panel-2); border:1px solid var(--grid); color:var(--text); width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; cursor:pointer;}
+header h1{font-size:16px; margin:0; flex:1; font-weight:700;}
+
+main{flex:1; padding:14px 16px 40px;}
+
+.home-intro h2{font-size:21px; margin:0 0 6px 0;}
+.home-intro p{color:var(--text-dim); font-size:15px; margin:0;}
+
+.tile-grid{display:flex; flex-direction:column; gap:10px;}
+.tile{display:flex; align-items:center; gap:14px; background:var(--panel); border:1px solid var(--grid); border-radius:14px; padding:14px; cursor:pointer; transition:.15s;}
+.tile:active{transform:translateY(-2px);}
+.tile-icon{width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:22px;}
+.tile-body h3{margin:0 0 3px 0; font-size:16.5px; color:var(--text); font-weight:700;}
+.tile-body p{margin:0; font-size:13.5px; color:var(--text-dim);}
+.tile-check{width:22px; height:22px; border-radius:50%; border:2px solid var(--grid); flex-shrink:0; display:flex; align-items:center; justify-content:center; color:var(--accent); font-weight:700;}
+.tile-check.done{border-color:var(--accent); background:var(--accent); color:#FFF;}
+
+.dots{display:flex; gap:5px; margin-bottom:10px;}
+.dots span{width:7px; height:7px; border-radius:50%; background:var(--grid);}
+.dots span.done{background:var(--accent);}
+
+p.lede{color:var(--text); font-size:15px; margin:0 0 16px 0; font-weight:500;}
+
+h3.sub{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--text-dim); letter-spacing:.8px; text-transform:uppercase; margin:18px 0 10px 0; font-weight:700;}
+
+.card{background:var(--panel); border:1px solid var(--grid); border-radius:16px; padding:18px; margin-bottom:14px;}
+
+.meter-wrap{margin:14px 0 4px; padding:10px 12px; background:var(--panel-2); border-radius:10px;}
+.meter-head{display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px; font-weight:700;}
+.meter-track{height:7px; background:var(--grid); border-radius:4px; overflow:hidden;}
+.meter-fill{height:100%; background:linear-gradient(90deg, var(--accent) 0%, #C4845D 100%); transition:width .3s;}
+
+.power-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;}
+.power-tile{background:var(--panel); border:1px solid var(--grid); border-radius:12px; padding:12px; text-align:center; cursor:pointer; transition:.15s;}
+.power-tile:active{transform:translateY(-2px);}
+.power-emoji{font-size:24px; margin-bottom:4px;}
+.power-num{font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--text-dim); letter-spacing:.5px; text-transform:uppercase; font-weight:700;}
+.power-title{font-size:12.5px; font-weight:700; color:var(--text); margin:4px 0 0 0; line-height:1.3;}
+
+.modal-overlay{display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.5); z-index:100; align-items:center; justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal-box{background:var(--panel); border-radius:16px; padding:20px; max-width:95%; max-height:85vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.modal-close{position:absolute; top:12px; right:12px; background:none; border:none; font-size:24px; cursor:pointer; color:var(--text-dim);}
+.power-modal-title{font-size:18px; font-weight:700; margin:0 0 8px 0; color:var(--accent);}
+.power-modal-text{font-size:15px; color:var(--text-dim); margin:0; line-height:1.6;}
+.power-detail-emoji{font-size:36px; margin-bottom:12px; display:block;}
+
+.law-item{background:var(--panel); border:1px solid var(--grid); border-left:4px solid var(--accent); border-radius:12px; padding:14px; margin-bottom:12px;}
+.law-section{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent); font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;}
+.law-title{font-size:15px; font-weight:700; color:var(--text); margin:0 0 6px 0;}
+.law-text{font-size:14px; color:var(--text-dim); margin:0; line-height:1.6;}
+
+.scenario-scene{background:var(--panel-2); border-left:4px solid var(--accent); border-radius:8px; padding:12px 14px; margin-bottom:12px; font-size:15.5px; color:var(--text); line-height:1.6;}
+
+.opt-button{display:block; width:100%; text-align:left; background:var(--panel); border:1px solid var(--grid); border-radius:12px; padding:12px 15px; margin-bottom:9px; cursor:pointer; font-size:15.5px; color:var(--text); font-weight:500; transition:.15s;}
+.opt-button:hover{border-color:var(--accent-dim);}
+.opt-button:active{transform:translateY(-1px);}
+.opt-button.correct{border-color:var(--good); background:#F0FDF4; color:var(--good); border-width:2px; font-weight:700;}
+.opt-button.incorrect{border-color:var(--bad); background:#FEE2E2; color:var(--bad); border-width:2px; font-weight:700;}
+.opt-button[disabled-look]{opacity:.35; pointer-events:none;}
+
+.feedback{display:flex; gap:12px; align-items:flex-start; margin-top:14px; padding-top:14px; border-top:1px solid var(--grid);}
+.feedback-mood{width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:20px; background:var(--panel-2);}
+.feedback-text{font-size:14px; color:var(--text-dim); font-weight:500;}
+
+.tap-item{display:flex; justify-content:space-between; align-items:center; gap:10px; background:var(--panel); border:1px solid var(--grid); border-radius:10px; padding:12px 14px; margin-bottom:8px; cursor:pointer; font-size:14.5px; color:var(--text); transition:.15s;}
+.tap-item.answered{border-color:var(--good); background:#F0FDF4;}
+.tap-tag{font-family:'JetBrains Mono',monospace; font-size:11px; padding:4px 10px; border-radius:8px; flex-shrink:0; font-weight:700; background:var(--panel-2); color:var(--text-dim);}
+.tap-tag.correct{background:#D1FAE5; color:var(--good);}
+
+.tf-item{background:var(--panel); border:1px solid var(--grid); border-radius:12px; padding:14px; margin-bottom:10px;}
+.tf-q{margin:0 0 10px 0; font-size:14.5px; font-weight:600; color:var(--text);}
+.tf-buttons{display:flex; gap:8px;}
+.tf-btn{flex:1; padding:10px; border-radius:9px; border:1px solid var(--grid); background:var(--panel-2); color:var(--text); font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.5px; cursor:pointer; font-weight:700; transition:.15s;}
+.tf-btn:hover{border-color:var(--accent-dim);}
+.tf-btn.correct{border-color:var(--good); background:#F0FDF4; color:var(--good); border-width:2px;}
+.tf-btn.incorrect{border-color:var(--bad); background:#FEE2E2; color:var(--bad); border-width:2px;}
+.tf-explain{margin-top:9px; font-size:13px; color:var(--text-dim); display:none; font-weight:500; border-left:3px solid var(--accent); padding-left:10px;}
+.tf-explain.show{display:block;}
+
+.btn{display:block; width:100%; font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.5px; text-transform:uppercase; background:linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%); color:#FFFFFF; border:none; padding:12px; cursor:pointer; border-radius:12px; margin-top:14px; font-weight:700;}
+.btn:disabled{background:var(--grid); color:var(--text-dim); cursor:not-allowed;}
+.btn.secondary{background:var(--panel); border:1px solid var(--grid); color:var(--text); background:none;}
+
+.result-card{text-align:center; padding:30px 20px; border:2px solid var(--accent); background:linear-gradient(135deg, #FEF3C7 0%, var(--panel-2) 100%); border-radius:16px;}
+.result-emoji{font-size:48px; margin-bottom:12px;}
+.result-score{font-family:'JetBrains Mono',monospace; font-size:48px; color:var(--accent); margin:10px 0; font-weight:700;}
+.result-title{font-size:22px; font-weight:700; margin:8px 0; color:var(--accent);}
+.result-msg{font-size:15px; color:var(--text-dim); margin:8px 0 0 0;}
+.result-card.fail{border-color:var(--bad); background:linear-gradient(135deg, #FEE2E2 0%, var(--panel-2) 100%);}
+.result-card.fail .result-score{color:var(--bad);}
+.result-card.fail .result-title{color:var(--bad);}
+
+.quiz-summary{background:var(--panel-2); border-radius:12px; padding:14px; margin:14px 0;}
+.summary-row{display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;}
+.summary-row strong{color:var(--text);}
+
+footer{text-align:center; font-size:12px; color:var(--text-dim); padding:18px; font-family:'JetBrains Mono',monospace;}
+</style>
+</head>
+<body>
+<div class="app">
+  <header id="appHeader"></header>
+  <main id="mainView"></main>
+</div>
+<footer>Source: Belford, C.S. (2026). Powers and Duties of Litter Prevention Wardens.</footer>
+
+<script>
+(function(){
+var icons = {
+  back:'<polyline points="15,18 9,12 15,6"/>'
+};
+function icon(n,s){
+  s=s||20;
+  return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+(icons[n]||'')+'</svg>';
+}
+
+var STORE_KEY = "module-02_state";
+var memFallback = {};
+function safeGet(k){ try{var v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){return memFallback[k]||null;} }
+function safeSet(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){memFallback[k]=v;} }
+
+var DEFAULT_STATE = {
+  confidence:50, trace:[50],
+  categoryProgress:{basics:false, powers:false, scenarios:false, authority:false, law:false},
+  quizScore:null, quizAnswers:null, quizTaken:false
+};
+var loadedState = safeGet(STORE_KEY);
+var state = Object.assign({}, DEFAULT_STATE, loadedState || {});
+state.categoryProgress = Object.assign({}, DEFAULT_STATE.categoryProgress, (loadedState && loadedState.categoryProgress) || {});
+function persist(){ safeSet(STORE_KEY, state); }
+
+var view = "home";
+var repIndex = 0;
+
+var basicsItems = [
+  {label:"You are appointed by a Public Authority", answer:true},
+  {label:"You can only act in places you are authorised to act", answer:true},
+  {label:"Your warrant is your evidence of appointment", answer:true},
+  {label:"You can never be removed from office", answer:false},
+  {label:"You may be honorary or permanent", answer:true}
+];
+
+var powersList = [
+  {num:"1", title:"General Enforcement", emoji:"⚖️", text:"You can enforce the Litter Act. Must be in uniform or have warrant as proof of authority."},
+  {num:"2", title:"Depositing Litter", emoji:"🗑️", text:"Require person caught littering to place it in nearest bin, or if too large, remove it to approved disposal site."},
+  {num:"3", title:"Criminal Proceedings", emoji:"⚔️", text:"Demand their true name and place of residence. Then decide: issue removal order or start proceedings."},
+  {num:"4", title:"Removal Orders", emoji:"📋", text:"Issue order instead of prosecution. They comply = no case. They don't = you prosecute."},
+  {num:"5", title:"Clean-up Orders", emoji:"🏘️", text:"Premises look bad from the street? Issue order requiring fix within minimum 14 days."},
+  {num:"6", title:"Enter Premises", emoji:"🚪", text:"You can enter at reasonable times to carry out a Clean-up Order."},
+  {num:"7", title:"Arrest Without Warrant", emoji:"🔗", text:"You can arrest anyone who breaks the Litter Act. Take them to nearest police station."},
+  {num:"8", title:"Fixed Penalty Notices", emoji:"💳", text:"Issue written notice. They can pay the fixed penalty or show up in court. Their choice."}
+];
+
+var scenarioReps = [
+  {scenario:"You spot someone throwing a plastic bag from a car window into a park. They're still there.", options:[
+    {text:"Ask them to pick it up and put it in the nearest bin", correct:true, delta:12, explain:"Right. Power 2. Your first move is always to have them place it in a receptacle."},
+    {text:"Immediately issue them a fixed penalty notice", correct:false, delta:-8, explain:"You can issue penalties, but first try to get them to clean it up themselves."},
+    {text:"Arrest them without warrant", correct:false, delta:-10, explain:"Arrest is your last resort, not your first move. Start with requiring placement."}
+  ]},
+  {scenario:"A homeowner's yard is clearly visible from the street and it's full of junk making the whole area look terrible. You've spoken to them twice already.", options:[
+    {text:"Issue a Clean-up Order with at least 14 days to fix it", correct:true, delta:15, explain:"Exactly right. Power 5. You've warned them. Now use your formal authority."},
+    {text:"Go in and clean it up yourself", correct:false, delta:-10, explain:"No. You don't clean it yourself. You order them to do it."},
+    {text:"Issue a fixed penalty notice", correct:false, delta:-8, explain:"Penalties are for littering offences, not unsightly property conditions."}
+  ]},
+  {scenario:"You catch someone dumping construction debris in an illegal spot. They refuse to give you their name or address.", options:[
+    {text:"Use Power 3: demand their true name and place of residence before deciding next steps", correct:true, delta:14, explain:"Correct. You need the information first. Then you decide whether to issue an order or prosecute."},
+    {text:"Arrest them on the spot", correct:false, delta:-10, explain:"You can arrest if needed, but first exercise your power to demand identification."},
+    {text:"Issue a Removal Order immediately", correct:false, delta:-8, explain:"You need their details first before issuing any order."}
+  ]},
+  {scenario:"You issue a Removal Order to someone. They comply completely within your deadline.", options:[
+    {text:"No prosecution. Case closed. The order did its job.", correct:true, delta:15, explain:"Right. Power 4 is clear. Compliance means no court case."},
+    {text:"Prosecute them anyway to set an example", correct:false, delta:-15, explain:"No. That violates the law. Compliance prevents prosecution."},
+    {text:"Issue a fixed penalty notice too", correct:false, delta:-12, explain:"Once they comply with the order, you're done."}
+  ]},
+  {scenario:"A business ignored your Clean-up Order. The deadline passed. The place still looks terrible.", options:[
+    {text:"You can enter the premises to carry out the order", correct:true, delta:15, explain:"Right. Power 6. After they ignore the order, you have entry authority."},
+    {text:"You need a court order before entering", correct:false, delta:-10, explain:"No. Your Clean-up Order gives you the authority. Entry is automatic."},
+    {text:"Arrest the owner", correct:false, delta:-12, explain:"Arrest is for breaking the Litter Act, not for ignoring orders."}
+  ]}
+];
+
+var standardsReps = [
+  {q:"An LPW can only work in places they're specifically authorised to act.", answer:true, explain:"Yes. The definition is specific: you act in public places 'under control of the Authority' in areas you're 'authorised to act.'"},
+  {q:"If someone complies with your Removal Order, you cannot prosecute them.", answer:true, explain:"Correct. Section 16B(5)(6) is clear: compliance stops prosecution. The order is the enforcement."},
+  {q:"You can enter any private premises whenever you want to enforce the Act.", answer:false, explain:"No. Entry power (Power 6) only applies when executing a Clean-up Order. Not general enforcement."},
+  {q:"A Fixed Penalty Notice means the person can either pay or appear in court.", answer:true, explain:"Yes. Section 24(1). They choose: pay within the timeframe or appear before the court."},
+  {q:"You can arrest someone for littering without needing a warrant first.", answer:true, explain:"Yes. Section 20 gives you and Constables power of arrest without warrant for Litter Act offences."}
+];
+
+var categories = [
+  {id:"basics", title:"The Basics", emoji:"📖"},
+  {id:"powers", title:"Your Eight Powers", emoji:"⚡"},
+  {id:"scenarios", title:"Real Situations", emoji:"🎯"},
+  {id:"authority", title:"Your Authority", emoji:"⚖️"},
+  {id:"law", title:"The Law", emoji:"📜"}
+];
+
+function applyDelta(delta){
+  state.confidence = Math.max(0, Math.min(100, state.confidence + delta));
+  state.trace.push(state.confidence);
+  persist();
+}
+
+function renderHeader(title, showBack){
+  var html = '';
+  if(showBack){ html += '<button class="back-btn" id="backBtn">'+icon("back",18)+'</button>'; }
+  html += '<h1>'+title+'</h1>';
+  document.getElementById("appHeader").innerHTML = html;
+  if(showBack){ document.getElementById("backBtn").addEventListener("click", goHome); }
+}
+function goHome(){ view="home"; renderAll(); }
+
+function renderHome(){
+  renderHeader("Module 2: LPW Powers", false);
+  var doneCount = categories.filter(function(c){return state.categoryProgress[c.id];}).length;
+  var html = '<div class="home-intro"><h2>Powers & Duties of Litter Prevention Wardens</h2><p>Five topics. Learn the law. Master the scenarios. Pass the exam.</p><p style="font-size:13.5px; color:var(--text-dim); margin-top:8px;">'+doneCount+' of '+categories.length+' topics done</p>' +
+    '<a href="./" style="display:inline-block; margin-top:8px; font-family:\'JetBrains Mono\',monospace; font-size:12px; color:var(--text-dim); text-decoration:none; border:1px solid var(--grid); padding:5px 10px; border-radius:8px;">&larr; All Modules</a></div>';
+  html += '<div class="tile-grid">';
+  categories.forEach(function(c){
+    var done = state.categoryProgress[c.id];
+    html += '<div class="tile" data-cat="'+c.id+'">' +
+      '<div class="tile-icon">'+c.emoji+'</div>' +
+      '<div class="tile-body"><h3>'+c.title+'</h3></div>' +
+      '<div class="tile-check '+(done?"done":"")+'">'+(done?'✓':'')+'</div></div>';
+  });
+  html += '</div>';
+  var quizDone = state.quizScore !== null;
+  html += '<div class="tile" data-cat="final" style="margin-top:14px; border:2px solid var(--accent);">' +
+    '<div class="tile-icon">🎯</div>' +
+    '<div class="tile-body"><h3>Final Check</h3><p style="margin:0; font-size:13px; color:var(--text-dim);">14 questions. 70% pass.</p></div>' +
+    '<div class="tile-check '+(quizDone?"done":"")+'">'+(quizDone?'✓':'')+'</div></div>';
+  document.getElementById("mainView").innerHTML = html;
+  Array.prototype.forEach.call(document.querySelectorAll(".tile"), function(t){
+    t.addEventListener("click", function(){
+      var cat = t.getAttribute("data-cat");
+      if(cat === "final"){ view = "final"; } else { view = cat; repIndex = 0; }
+      renderAll();
+    });
+  });
+}
+
+function renderBasics(){
+  renderHeader("The Basics", true);
+  var html = '<p class="lede">An LPW is appointed by a Public Authority to enforce the Litter Act in authorized public places. That is your role. These are your terms.</p>';
+  
+  html += '<div class="card"><h3 class="sub">Who You Are</h3><p>You are a Litter Prevention Warden. The Public Authority appoints you. You have specific powers under the Litter Act to prevent and deal with littering in the places you are authorized to work.</p></div>';
+  
+  html += '<div class="card"><h3 class="sub">Your Terms</h3><div style="font-size:14px; color:var(--text); line-height:1.8;"><div style="margin-bottom:10px;"><strong style="color:var(--accent);">You serve at pleasure:</strong> The Authority can remove you anytime.</div><div style="margin-bottom:10px;"><strong style="color:var(--accent);">You can resign:</strong> Write to the CEO of the Public Authority.</div><div style="margin-bottom:10px;"><strong style="color:var(--accent);">You get a warrant:</strong> Written proof of your appointment.</div><div style="margin-bottom:10px;"><strong style="color:var(--accent);">You act in authorized places:</strong> Not everywhere, only where you are assigned.</div></div></div>';
+  
+  html += '<div class="card"><h3 class="sub">Test Yourself</h3><p style="color:var(--text-dim); font-size:13.5px; margin-bottom:12px;">Tap each statement. Figure out if it is true or false before you tap it.</p>';
+  html += '<div id="sortList">';
+  basicsItems.forEach(function(item,i){
+    html += '<div class="tap-item" data-i="'+i+'"><span style="flex:1;">'+item.label+'</span><span class="tap-tag" style="display:none;"></span></div>';
+  });
+  html += '</div></div>';
+  
+  html += '<button class="btn" id="doneBasics">Mark Complete</button>';
+  document.getElementById("mainView").innerHTML = html;
+  Array.prototype.forEach.call(document.querySelectorAll("#sortList .tap-item"), function(el){
+    el.addEventListener("click", function(){
+      if(el.dataset.answered) return;
+      el.dataset.answered = "1";
+      var item = basicsItems[parseInt(el.getAttribute("data-i"),10)];
+      el.classList.add("answered");
+      var tag = el.querySelector(".tap-tag");
+      tag.textContent = item.answer ? "True" : "False";
+      if(item.answer) tag.classList.add("correct");
+      tag.style.display = "block";
+    });
+  });
+  document.getElementById("doneBasics").addEventListener("click", function(){
+    state.categoryProgress.basics = true; persist(); goHome();
+  });
+}
+
+function renderPowers(){
+  renderHeader("Your Eight Powers", true);
+  var html = '<p class="lede">The Litter Act gives you eight specific powers. Tap any one to learn what it means.</p>';
+  html += '<div class="power-grid">';
+  powersList.forEach(function(p,i){
+    html += '<div class="power-tile" data-i="'+i+'"><div class="power-emoji">'+p.emoji+'</div><div class="power-num">Power '+p.num+'</div><div class="power-title">'+p.title+'</div></div>';
+  });
+  html += '</div>';
+  html += '<div id="powerModal" class="modal-overlay"><div class="modal-box" style="position:relative;"><button class="modal-close" id="closeModal">×</button><div id="modalContent"></div></div></div>';
+  html += '<button class="btn" id="donePowers">Mark Complete</button>';
+  document.getElementById("mainView").innerHTML = html;
+  Array.prototype.forEach.call(document.querySelectorAll(".power-tile"), function(tile){
+    tile.addEventListener("click", function(){
+      var i = parseInt(tile.getAttribute("data-i"),10);
+      var p = powersList[i];
+      document.getElementById("modalContent").innerHTML = '<div class="power-detail-emoji">'+p.emoji+'</div><h2 class="power-modal-title">Power '+p.num+': '+p.title+'</h2><p class="power-modal-text">'+p.text+'</p>';
+      document.getElementById("powerModal").classList.add("show");
+    });
+  });
+  document.getElementById("closeModal").addEventListener("click", function(){
+    document.getElementById("powerModal").classList.remove("show");
+  });
+  document.getElementById("powerModal").addEventListener("click", function(e){
+    if(e.target === document.getElementById("powerModal")){
+      document.getElementById("powerModal").classList.remove("show");
+    }
+  });
+  document.getElementById("donePowers").addEventListener("click", function(){
+    state.categoryProgress.powers = true; persist(); goHome();
+  });
+}
+
+function renderScenarios(){
+  renderHeader("Real Situations", true);
+  var rep = scenarioReps[repIndex];
+  var html = '<div class="dots">' + scenarioReps.map(function(_,i){return '<span class="'+(i<repIndex?"done":"")+'"></span>';}).join('') + '</div>';
+  html += '<div style="margin:14px 0 4px; padding:10px 12px; background:var(--panel-2); border-radius:10px;"><div style="display:flex; justify-content:space-between; font-family:\'JetBrains Mono\',monospace; font-size:10.5px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px; font-weight:700;"><span>Confidence</span><span>'+state.confidence+'%</span></div><div style="height:7px; background:var(--grid); border-radius:4px; overflow:hidden;"><div style="height:100%; background:linear-gradient(90deg, var(--accent) 0%, #C4845D 100%); width:'+state.confidence+'%; transition:width .3s;"></div></div></div>';
+  html += '<div class="card"><div class="scenario-scene">'+rep.scenario+'</div><div id="optArea">';
+  rep.options.forEach(function(o,i){
+    html += '<button class="opt-button" data-i="'+i+'">'+o.text+'</button>';
+  });
+  html += '</div><div id="fbArea"></div></div>';
+  html += '<button class="btn secondary" id="nextRep" disabled>Next</button>';
+  document.getElementById("mainView").innerHTML = html;
+  
+  var answered = false;
+  Array.prototype.forEach.call(document.querySelectorAll(".opt-button"), function(btn){
+    btn.addEventListener("click", function(){
+      if(answered) return;
+      var i = parseInt(btn.getAttribute("data-i"),10);
+      var opt = rep.options[i];
+      if(!opt.correct){ answered=false; return; }
+      answered = true;
+      btn.classList.add(opt.correct ? "correct" : "incorrect");
+      Array.prototype.forEach.call(document.querySelectorAll(".opt-button"), function(b){
+        if(b!==btn) b.setAttribute("disabled-look","");
+      });
+      applyDelta(opt.delta);
+      var mood = opt.delta >= 10 ? "👍" : "💭";
+      document.getElementById("fbArea").innerHTML = '<div class="feedback"><div class="feedback-mood">'+mood+'</div><div class="feedback-text">'+opt.explain+'</div></div>';
+      document.getElementById("nextRep").disabled = false;
+    });
+  });
+  document.getElementById("nextRep").addEventListener("click", function(){
+    repIndex++;
+    if(repIndex >= scenarioReps.length){ state.categoryProgress.scenarios = true; persist(); goHome(); }
+    else { renderAll(); }
+  });
+}
+
+function renderAuthority(){
+  renderHeader("Your Authority", true);
+  var html = '<p class="lede">True or False. Each one is based on the Litter Act. Get these right and you know what you can actually do.</p>';
+  html += standardsReps.map(function(s,i){
+    return '<div class="tf-item" data-i="'+i+'"><p class="tf-q">'+s.q+'</p><div class="tf-buttons"><button class="tf-btn" data-val="true" style="width:48%; padding:9px;">True</button><button class="tf-btn" data-val="false" style="width:48%; padding:9px;">False</button></div><div class="tf-explain">'+s.explain+'</div></div>';
+  }).join('');
+  html += '<button class="btn" id="doneAuthority" disabled>Mark Complete</button>';
+  document.getElementById("mainView").innerHTML = html;
+  var answeredCount = 0;
+  Array.prototype.forEach.call(document.querySelectorAll(".tf-item"), function(item){
+    var idx = parseInt(item.getAttribute("data-i"),10);
+    var s = standardsReps[idx];
+    Array.prototype.forEach.call(item.querySelectorAll(".tf-btn"), function(btn){
+      btn.addEventListener("click", function(){
+        if(item.dataset.answered) return;
+        item.dataset.answered = "1";
+        var val = btn.getAttribute("data-val") === "true";
+        var correct = val === s.answer;
+        btn.classList.add(correct ? "correct" : "incorrect");
+        Array.prototype.forEach.call(item.querySelectorAll(".tf-btn"), function(b){
+          if(b!==btn) b.setAttribute("disabled-look","");
+        });
+        item.querySelector(".tf-explain").classList.add("show");
+        answeredCount++;
+        if(answeredCount === standardsReps.length){ document.getElementById("doneAuthority").disabled = false; }
+      });
+    });
+  });
+  document.getElementById("doneAuthority").addEventListener("click", function(){
+    state.categoryProgress.authority = true; persist(); goHome();
+  });
+}
+
+function renderLaw(){
+  renderHeader("The Law", true);
+  var html = '<p class="lede">These are the actual sections of the Litter Act that give you your powers. Know the reference.</p>';
+  var sections = [
+    {sec:"Section 16B(1)", title:"General Enforcement", text:"You can enforce the Litter Act. Must be in uniform or have warrant as proof."},
+    {sec:"Section 16B(1)", title:"Depositing Litter", text:"Require placement in bin or removal to approved disposal site."},
+    {sec:"Section 16B(3)", title:"Criminal Proceedings", text:"Require name and address. Then issue order or prosecute."},
+    {sec:"Section 16B(5)(6)", title:"Removal Orders", text:"They comply: no prosecution. They don't: you prosecute."},
+    {sec:"Section 16C(1)(2)", title:"Clean-up Orders", text:"Minimum 14 days. Issued for unsightly premises visible from street."},
+    {sec:"Section 16C(8)", title:"Entry to Premises", text:"You can enter at reasonable times to execute a Clean-up Order."},
+    {sec:"Section 20", title:"Arrest Without Warrant", text:"Take into custody anyone breaking the Litter Act."},
+    {sec:"Section 24(1)", title:"Fixed Penalty Notices", text:"They can pay the penalty or appear in court. Their choice."}
+  ];
+  html += '<div>';
+  sections.forEach(function(s){
+    html += '<div class="law-item"><div class="law-section">'+s.sec+'</div><h3 class="law-title">'+s.title+'</h3><p class="law-text">'+s.text+'</p></div>';
+  });
+  html += '</div>';
+  html += '<button class="btn" id="doneLaw">Mark Complete</button>';
+  document.getElementById("mainView").innerHTML = html;
+  document.getElementById("doneLaw").addEventListener("click", function(){
+    state.categoryProgress.law = true; persist(); goHome();
+  });
+}
+
+var quizQuestions = [
+  {q:"What does LPW stand for?", c:["Litter Prevention Warden","Litter Police Warrant","Local Policing Warrant","Litter Public Works"], a:0},
+  {q:"You can only act in places you are authorised to act.", c:["True","False"], a:0},
+  {q:"If someone complies with your Removal Order, what happens?", c:["You prosecute anyway","No prosecution proceeds","You issue a Fixed Penalty","You issue a Clean-up Order"], a:1},
+  {q:"What is the minimum time for a Clean-up Order?", c:["7 days","10 days","14 days","30 days"], a:2},
+  {q:"Can you arrest someone for littering without a warrant?", c:["Yes","No","Only with permission","Only if they resist"], a:0},
+  {q:"When can you enter premises?", c:["Anytime, anywhere","To execute a Clean-up Order at reasonable times","Never without police","Only with court order"], a:1},
+  {q:"Which power lets you require someone caught littering to put it in a bin?", c:["Power 1","Power 2","Power 3","Power 4"], a:1},
+  {q:"A Fixed Penalty Notice gives them which option?", c:["Only pay","Only appear in court","Pay OR appear in court","No choice"], a:2},
+  {q:"What is your evidence of appointment?", c:["Your ID card","Your training certificate","Your written warrant","An email"], a:2},
+  {q:"Can you be removed from office?", c:["Never","Only if convicted","Anytime by the Authority","Only by court order"], a:2},
+  {q:"Under Section 16B(1), what can you do?", c:["Only issue penalties","Summarily act to prevent deposit","Only report to police","Only warn"], a:1},
+  {q:"If litter is too large for a bin, what do you do?", c:["Leave it","Require removal to approved site","Fine them double","Call police"], a:1},
+  {q:"What is the relationship between a Removal Order and prosecution?", c:["Both always happen","Compliance prevents prosecution","They are unrelated","Always do both"], a:1},
+  {q:"Use informal action before formal orders.", c:["True","False"], a:0}
+];
+
+function renderFinal(){
+  if(state.quizScore !== null){ renderResult(state.quizScore, state.quizAnswers); return; }
+  renderHeader("Final Check", true);
+  var html = '<p class="lede">14 questions. 70% pass. You have studied. You are ready.</p><div id="quizArea"></div><button class="btn" id="submitQuiz">Submit</button>';
+  document.getElementById("mainView").innerHTML = html;
+  var area = document.getElementById("quizArea");
+  var answers = new Array(quizQuestions.length).fill(null);
+  quizQuestions.forEach(function(q,qi){
+    var block = document.createElement("div");
+    block.style.marginBottom = "16px";
+    block.innerHTML = '<p style="font-weight:700; font-size:14.5px; margin-bottom:8px; color:var(--text);">'+(qi+1)+'. '+q.q+'</p>';
+    var optsWrap = document.createElement("div");
+    q.c.forEach(function(choice,ci){
+      var b = document.createElement("button");
+      b.className = "opt-button";
+      b.textContent = choice;
+      b.style.marginBottom = "7px";
+      b.addEventListener("click", function(){
+        Array.prototype.forEach.call(optsWrap.children, function(x){ x.classList.remove("correct"); });
+        b.classList.add("correct");
+        answers[qi] = ci;
+      });
+      optsWrap.appendChild(b);
+    });
+    block.appendChild(optsWrap);
+    area.appendChild(block);
+  });
+  document.getElementById("submitQuiz").addEventListener("click", function(){
+    var unanswered = answers.indexOf(null);
+    if(unanswered !== -1){ alert("Question "+(unanswered+1)+" needs an answer."); return; }
+    var correct = 0;
+    quizQuestions.forEach(function(q,qi){ if(answers[qi]===q.a) correct++; });
+    var pct = Math.round((correct/quizQuestions.length)*100);
+    state.quizScore = pct;
+    state.quizAnswers = answers;
+    state.quizTaken = true;
+    persist();
+    renderResult(pct, answers);
+  });
+}
+
+function renderResult(pct, answers){
+  renderHeader("Results", true);
+  var pass = pct >= 70;
+  var emoji = pass ? "🏆" : "📚";
+  var html = '<div class="result-card '+(pass?"":"fail")+'">' +
+    '<div class="result-emoji">'+emoji+'</div>' +
+    '<div class="result-score">'+pct+'%</div>' +
+    '<div class="result-title">'+(pass ? "You Passed" : "Review & Retake")+'</div>' +
+    '<div class="result-msg">'+(pass ? "You know the Act. You are ready." : "Study the weak areas. You can do this.")+'</div>' +
+    '</div>';
+  
+  if(answers){
+    var wrongQuestions = [];
+    quizQuestions.forEach(function(q,qi){
+      if(answers[qi] !== q.a){ wrongQuestions.push({qi:qi, q:q, chosen:q.c[answers[qi]], correct:q.c[q.a]}); }
+    });
+    
+    if(wrongQuestions.length > 0){
+      html += '<div class="quiz-summary"><div style="font-weight:700; margin-bottom:8px;">Questions to Review:</div>';
+      wrongQuestions.slice(0,3).forEach(function(w){
+        html += '<div style="font-size:13px; color:var(--text-dim); margin-bottom:6px;"><strong style="color:var(--bad);">Q'+(w.qi+1)+':</strong> You chose "'+w.chosen+'". Correct: "'+w.correct+'".</div>';
+      });
+      if(wrongQuestions.length > 3){
+        html += '<div style="font-size:12px; color:var(--text-dim); margin-top:8px; font-style:italic;">...and '+(wrongQuestions.length-3)+' more question(s) to review.</div>';
+      }
+      html += '</div>';
+    }
+  }
+  
+  document.getElementById("mainView").innerHTML = html;
+  if(!pass){
+    var retryBtn = document.createElement("button");
+    retryBtn.className = "btn secondary";
+    retryBtn.textContent = "Retake Quiz";
+    document.getElementById("mainView").appendChild(retryBtn);
+    retryBtn.addEventListener("click", function(){ state.quizScore = null; state.quizAnswers = null; persist(); renderAll(); });
+  }
+}
+
+function renderAll(){
+  if(view === "home") renderHome();
+  else if(view === "basics") renderBasics();
+  else if(view === "powers") renderPowers();
+  else if(view === "scenarios") renderScenarios();
+  else if(view === "authority") renderAuthority();
+  else if(view === "law") renderLaw();
+  else if(view === "final") renderFinal();
+}
+renderAll();
+})();
+</script>
+</body>
+</html>
