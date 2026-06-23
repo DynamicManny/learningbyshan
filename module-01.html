@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Module 1: Customer Service in Policing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Inter:wght=400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBEEF1; --panel:#FFFFFF; --panel-2:#FDF1F4; --grid:#E6C5D0;
+  --text:#2D1F27; --text-dim:#6B4E5E; --text-dimmer:#8A687A;
+  --brass:#C24D71; --brass-dim:#9E3555; --steel:#5D4478; --plum:#824B73;
+  --warn:#A0541A; --bad:#B52A3C; --good:#1B663B;
+}
+*{box-sizing:border-box;}
+html,body{margin:0; background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; font-size:17px; line-height:1.5;}
+.mono{font-family:'JetBrains Mono',monospace;}
+svg.icon{display:block; flex-shrink:0;}
+button{font-family:inherit;}
+
+.app{max-width:480px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column;}
+header{display:flex; align-items:center; gap:10px; padding:16px 16px 12px; position:sticky; top:0; background:var(--bg); z-index:5; border-bottom:1px solid var(--grid);}
+.back-btn{background:var(--panel-2); border:1px solid var(--grid); color:var(--text); width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;}
+header h1{font-size:16px; margin:0; flex:1; font-weight: 700;}
+.dots{display:flex; gap:5px;}
+.dots span{width:7px; height:7px; border-radius:50%; background:var(--grid);}
+.dots span.done{background:var(--brass);}
+
+main{flex:1; padding:14px 16px 40px;}
+.home-intro{padding:6px 2px 16px;}
+.home-intro h2{font-size:21px; margin:0 0 6px 0;}
+.home-intro p{color:var(--text-dim); font-size:15px; margin:0;}
+
+.tile-grid{display:flex; flex-direction:column; gap:10px;}
+.tile{display:flex; align-items:center; gap:14px; background:var(--panel); border:1px solid var(--grid); border-radius:14px; padding:14px; cursor:pointer; text-align:left;}
+.tile:active{border-color:var(--brass-dim);}
+.tile-icon{width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.tile-body{flex:1; min-width:0;}
+.tile-body h3{margin:0 0 3px 0; font-size:16.5px; color: var(--text);}
+.tile-body p{margin:0; font-size:13.5px; color:var(--text-dim);}
+.tile-check{width:22px; height:22px; border-radius:50%; border:2px solid var(--grid); flex-shrink:0; display:flex; align-items:center; justify-content:center; color:var(--brass);}
+.tile-check.done{border-color:var(--brass); background:#FCEFE2;}
+
+h2.section-title{font-size:19px; margin:4px 0 4px 0;}
+p.lede{color:var(--text); font-size:15px; margin:0 0 16px 0; font-weight: 500;}
+
+.chip-wrap{display:flex; flex-wrap:wrap; gap:7px; margin-bottom:16px;}
+.chip{display:flex; align-items:center; gap:6px; background:var(--panel); border:1px solid var(--grid); border-radius:18px; padding:7px 12px 7px 8px; font-size:13.5px; color: var(--text); font-weight: 500;}
+.chip .ic{color:var(--brass);}
+.chip.steel .ic{color:var(--steel);}
+h3.sub{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--steel); letter-spacing:.8px; text-transform:uppercase; margin:18px 0 8px 0; font-weight: 700;}
+
+.tap-item{display:flex; justify-content:space-between; align-items:center; gap:10px; background:var(--panel); border:1px solid var(--grid); border-radius:10px; padding:12px 14px; margin-bottom:8px; cursor:pointer; font-size:15.5px;}
+.tap-item .tag{font-family:'JetBrains Mono',monospace; font-size:11px; padding:4px 10px; border-radius:8px; flex-shrink:0; font-weight: 700;}
+.tap-item.right{border-color:var(--good); border-width: 2px;}
+.tap-item.wrong{border-color:var(--bad); border-width: 2px;}
+.tag.yes{background:#EAF6EE; color:var(--good); border: 1px solid var(--good);}
+.tag.no{background:#FCE9EA; color:var(--bad); border: 1px solid var(--bad);}
+
+.card{background:var(--panel); border:1px solid var(--grid); border-radius:16px; padding:18px;}
+.scene-row{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
+.avatar{width:54px; height:54px; border-radius:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--bg);}
+.scene-title{font-size:13px; color:var(--text-dim); font-family:'JetBrains Mono',monospace; letter-spacing:.5px; text-transform:uppercase; font-weight: 700;}
+.line{font-size:17px; padding:13px 14px; background:var(--panel-2); border-radius:10px; margin-bottom:12px; border-left: 4px solid var(--brass);}
+
+.diag-row{display:flex; gap:6px; margin-bottom:14px; flex-wrap:wrap;}
+.diag-chip{flex:1; min-width:90px; background:var(--panel-2); border:1px solid var(--grid); border-radius:8px; padding:7px 9px; font-size:12px;}
+.diag-chip .l{color:var(--text-dim); font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.5px; text-transform:uppercase; font-weight: 600;}
+.diag-chip .v{margin-top:2px; font-size:13px; font-weight: 600; color: var(--text);}
+
+.opt{display:block; width:100%; text-align:left; background:var(--panel); border:1px solid var(--grid); border-radius:12px; padding:14px 15px; margin-bottom:9px; cursor:pointer; font-size:15.5px; color:var(--text); font-weight: 500;}
+.opt:active{border-color:var(--brass-dim);}
+.opt.good{border-color:var(--good); background:#EAF6EE; color: var(--good); border-width: 2px;}
+.opt.bad{border-color:var(--bad); background:#FCE9EA; color: var(--bad); border-width: 2px;}
+.opt[disabled-look]{opacity:.35; pointer-events:none;}
+
+.feedback-row{display:flex; gap:12px; align-items:flex-start; margin-top:14px; padding-top:14px; border-top:1px dashed var(--grid);}
+.mood{width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.mood.happy{background:#EAF6EE; color:var(--good);}
+.mood.neutral{background:#FCEFE2; color:var(--warn);}
+.mood.sad{background:#FCE9EA; color:var(--bad);}
+.reaction{font-size:15.5px; color:var(--text); font-style:italic; font-weight: 500;}
+
+.meter-wrap{margin:14px 0 4px; padding:10px 12px; background:var(--panel-2); border-radius:10px;}
+.meter-head{display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px; font-weight: 700;}
+.meter-track{height:7px; background:var(--grid); border-radius:4px; overflow:hidden;}
+.meter-fill{height:100%; background:var(--brass); transition:width .3s;}
+
+.btn{display:block; width:100%; font-family:'JetBrains Mono',monospace; font-size:13.5px; letter-spacing:.5px; text-transform:uppercase; background:var(--brass); color:#FFFFFF; border:none; padding:14px; cursor:pointer; border-radius:12px; margin-top:14px; font-weight: 700;}
+.btn:disabled{background:#E6C5D0; color:#8A687A;}
+.btn.secondary{background:var(--panel); border:1px solid var(--grid); color:var(--text);}
+
+.pie-wrap{margin:10px 0;}
+.pie-legend{margin-top:12px; display:flex; flex-direction:column; gap:7px;}
+.pie-legend div{display:flex; align-items:center; gap:9px; font-size:14.5px; font-weight: 500;}
+.swatch{width:12px; height:12px; border-radius:3px; flex-shrink:0;}
+
+.tf-item{background:var(--panel); border:1px solid var(--grid); border-radius:12px; padding:14px; margin-bottom:10px;}
+.tf-item p{margin:0 0 10px 0; font-size:15.5px;}
+.tf-buttons{display:flex; gap:8px;}
+.tf-btn{flex:1; padding:10px; border-radius:9px; border:1px solid var(--grid); background:var(--panel); color:var(--text); font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:.5px; cursor:pointer; font-weight: 600;}
+.tf-btn.sel-good{border-color:var(--good); background:#EAF6EE; color: var(--good); border-width: 2px;}
+.tf-btn.sel-bad{border-color:var(--bad); background:#FCE9EA; color: var(--bad); border-width: 2px;}
+.tf-explain{margin-top:9px; font-size:13.5px; color:var(--text-dim); display:none; font-weight: 500;}
+.tf-explain.show{display:block;}
+
+.result-card{text-align:center; padding:30px 20px; border:2px solid var(--brass); background:#FCEDF1; border-radius:16px;}
+.result-card.fail { border-color:var(--bad); background:#FCE9EA; }
+.result-score{font-family:'JetBrains Mono',monospace; font-size:40px; color:var(--brass); margin:10px 0; font-weight: 700;}
+.result-card.fail .result-score{color:var(--bad);}
+footer{text-align:center; font-size:12px; color:var(--text-dim); padding:18px; font-family:'JetBrains Mono',monospace;}
+</style>
+</head>
+<body>
+<div class="app">
+  <header id="appHeader"></header>
+  <main id="mainView"></main>
+</div>
+<footer>Source: Belford, C.S. (2024). Customer Service in Policing.</footer>
+
+<script>
+(function(){
+/* ---------------- ICONS ---------------- */
+var P = {
+  bolt:'<polyline points="13,2 6,13 11,13 9,22 18,10 13,10 13,2"/>',
+  eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+  speech:'<path d="M3 5h18v11H8l-5 5V5Z"/>',
+  person:'<circle cx="12" cy="7" r="3"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/>',
+  wave:'<path d="M3 14v-4M7 17v-10M11 20v-16M15 17v-10M19 14v-4"/>',
+  face:'<circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/><path d="M8 15c1.5 1.5 6.5 1.5 8 0"/>',
+  triangle:'<path d="M12 3 2 21h20L12 3Z"/><line x1="12" y1="9" x2="12" y2="14"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/>',
+  heart:'<path d="M12 21s-7-4.5-9.5-9C1 8 3 4 7 4c2 0 4 1.5 5 3 1-1.5 3-3 5-3 4 0 6 4 4.5 8C19 16.5 12 21 12 21Z"/>',
+  shield:'<path d="M12 2 4 5v6c0 5 4 9 8 11 4-2 8-6 8-11V5l-8-3Z"/>',
+  cpu:'<rect x="6" y="6" width="12" height="12" rx="1"/><line x1="9" y1="2" x2="9" y2="6"/><line x1="15" y1="2" x2="15" y2="6"/><line x1="9" y1="18" x2="9" y2="22"/><line x1="15" y1="18" x2="15" y2="22"/><line x1="2" y1="9" x2="6" y2="9"/><line x1="2" y1="15" x2="6" y2="15"/><line x1="18" y1="9" x2="22" y2="9"/><line x1="18" y1="15" x2="22" y2="15"/>',
+  alert:'<circle cx="12" cy="12" r="9"/><line x1="12" y1="7" x2="12" y2="13"/><circle cx="12" cy="16.5" r="0.6" fill="currentColor"/>',
+  star:'<path d="M12 2 14.6 9 22 9.3 16.2 14 18 21 12 17 6 21 7.8 14 2 9.3 9.4 9 12 2Z"/>',
+  loop:'<path d="M4 12a8 8 0 0 1 14-5"/><path d="M20 12a8 8 0 0 1-14 5"/><polyline points="17,4 18,8 14,7"/><polyline points="7,20 6,16 10,17"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><line x1="3" y1="12" x2="21" y2="12"/><path d="M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
+  check:'<polyline points="4,13 9,18 20,6"/>',
+  phone:'<path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 6 6L16 14l5 2v4a2 2 0 0 1-2 2C10 22 2 14 2 6a2 2 0 0 1 2-2Z"/>',
+  flame:'<path d="M12 2c2 4-1 5-1 8a4 4 0 1 0 8 0c0-2-1-3-1-3 1 4-2 6-4 6-3 0-5-2-5-5 0-3 2-4 3-6Z"/>',
+  back:'<polyline points="15,18 9,12 15,6"/>',
+  pie:'<circle cx="12" cy="12" r="9"/><path d="M12 3v9l7 4"/>',
+  happy:'<circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/><path d="M8 14c1.2 1.6 6.8 1.6 8 0"/>',
+  neutral:'<circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/><line x1="8.5" y1="15" x2="15.5" y2="15"/>',
+  sad:'<circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/><path d="M8 16c1.2-1.6 6.8-1.6 8 0"/>'
+};
+function icon(name, size, strokeW){
+  size = size || 20;
+  return '<svg class="icon" width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'+(strokeW||1.7)+'" stroke-linecap="round" stroke-linejoin="round">' + (P[name]||'') + '</svg>';
+}
+
+/* ---------------- STORAGE ---------------- */
+var STORE_KEY = "module01_state";
+var memFallback = {};
+function safeGet(k){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):null; }catch(e){ return memFallback[k]||null; } }
+function safeSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){ memFallback[k]=v; } }
+function scormSet(k,v){ try{ if(window.API_1484_11 && window.API_1484_11.SetValue){ window.API_1484_11.SetValue(k,String(v)); window.API_1484_11.Commit(""); } }catch(e){} }
+
+var DEFAULT_STATE = {
+  confidence:50, trace:[50],
+  categoryProgress:{basics:false, words:false, people:false, excuses:false, calls:false, standards:false, leave:false},
+  quizScore:null
+};
+var loadedState = safeGet(STORE_KEY);
+var state = Object.assign({}, DEFAULT_STATE, loadedState || {});
+state.categoryProgress = Object.assign({}, DEFAULT_STATE.categoryProgress, (loadedState && loadedState.categoryProgress) || {});
+function persist(){ safeSet(STORE_KEY, state); }
+
+var view = "home";
+var activeCategory = null;
+var repIndex = 0;
+
+/* ---------------- DATA ---------------- */
+var pillars = [
+  {icon:"bolt", label:"Action"},{icon:"eye", label:"Interest"},{icon:"speech", label:"Verbal"},
+  {icon:"person", label:"Body Language"},{icon:"wave", label:"Tone"},{icon:"face", label:"Attitude"}
+];
+
+var basicsSort = [
+  {label:"Resident reporting a theft", yes:true},
+  {label:"Witness to a collision", yes:true},
+  {label:"Person under arrest", yes:false},
+  {label:"Colleague asking for a file", yes:true}
+];
+
+var wordsReps = [
+  {neg:"That's not my job.", opts:["I'll find out who can help you with that.","You'll have to figure that out yourself.","Why don't you ask someone else?"], correct:0, explain:"Owning the handoff keeps their confidence in the service."},
+  {neg:"You don't understand.", opts:["I see what you mean, let me get this right.","You're not explaining it properly.","Hold on a second."], correct:0, explain:"Reflecting their concern shows you're listening."},
+  {neg:"What's your problem?", opts:["How may I help?","That's not my job.","You're wasting my time."], correct:0, explain:"A calm, open question resets the tone."},
+  {neg:"I don't know.", opts:["I'll find out and get back to you.","That's not my department.","You'll have to ask someone else."], correct:0, explain:"This keeps the door open instead of closing it."}
+];
+
+/* Accessibility Note: Darker high-contrast accent tones optimized for accessibility guidelines */
+var peopleReps = [
+  {name:"Talkative", icon:"speech", color:"var(--steel)", tone:"Steady", heat:"Low",
+   scene:"Complaining about a noise violation. Ten minutes in, still no actual incident time or location stated.",
+   opts:[
+     {tag:"Closed Question", text:"\"Just to confirm, what date and time did you hear the noise?\"", best:true, delta:15, reaction:"\"Oh, right. Tuesday around 11pm.\""},
+     {tag:"Verbal Trap", text:"\"Hold on a second.\"", best:false, delta:-10, reaction:"\"...I was getting to that.\""},
+     {tag:"No Redirect", text:"Let them keep going.", best:false, delta:-5, reaction:"The story continues, nothing resolved."}
+   ]},
+  {name:"Angry", icon:"flame", color:"var(--bad)", tone:"Sharp", heat:"High",
+   scene:"Raised voice at the counter over a delayed report.",
+   opts:[
+     {tag:"Apologize", text:"\"I'm sorry about the wait. Let's sort this now.\"", best:true, delta:18, reaction:"\"...Okay. Thank you.\""},
+     {tag:"Verbal Trap", text:"\"You'll have to wait like everyone else.\"", best:false, delta:-15, reaction:"His voice gets louder."},
+     {tag:"Disengage", text:"Walk away until he calms down.", best:false, delta:-10, reaction:"He follows you, angrier."}
+   ]},
+  {name:"Know-It-All", icon:"star", color:"var(--plum)", tone:"Confident", heat:"Medium",
+   scene:"Citing three statutes, two of them wrong.",
+   opts:[
+     {tag:"Acknowledge", text:"Credit their research, gently correct the error.", best:true, delta:14, reaction:"\"...Fair enough.\""},
+     {tag:"Correct Hard", text:"Correct every error to prove you know more.", best:false, delta:-10, reaction:"They dig in harder."},
+     {tag:"Let It Slide", text:"Agree with everything, even the wrong parts.", best:false, delta:-8, reaction:"Wrong information stands uncorrected."}
+   ]},
+  {name:"Indecisive", icon:"loop", color:"var(--steel)", tone:"Hesitant", heat:"Low",
+   scene:"Wants to complain, keeps changing what they want.",
+   opts:[
+     {tag:"Reflect & Recommend", text:"Reflect what they said, recommend a path.", best:true, delta:15, reaction:"\"...Yes, let's do that.\""},
+     {tag:"Verbal Trap", text:"\"Come back once you've decided.\"", best:false, delta:-12, reaction:"They leave, nothing filed."},
+     {tag:"List Everything", text:"List every option, no steer.", best:false, delta:-5, reaction:"More lost than before."}
+   ]},
+  {name:"Suspicious", icon:"eye", color:"var(--warn)", tone:"Clipped", heat:"Medium",
+   scene:"Questions whether you even have authority to take a statement.",
+   opts:[
+     {tag:"Credibility", text:"Calmly explain the process, establish credibility.", best:true, delta:15, reaction:"\"...Alright, makes sense.\""},
+     {tag:"Guess", text:"Guess rather than admit you need to check.", best:false, delta:-15, reaction:"\"See, you don't even know.\""},
+     {tag:"Get Defensive", text:"Respond like it's a personal attack.", best:false, delta:-10, reaction:"Trust drops further."}
+   ]}
+];
+
+var excusesReps = [
+  {line:"A colleague says: \"How can we do a good job if the computer's always down?\"", icon:"cpu",
+   opts:[
+     {text:"Acknowledge it, keep handling people without joining the complaint.", best:true, delta:8, reaction:"The line keeps moving."},
+     {text:"Vent along and let the queue back up.", best:false, delta:-10, reaction:"Three more people now waiting."},
+     {text:"Snap at the colleague for complaining.", best:false, delta:-8, reaction:"Tension, nothing fixed."}
+   ]},
+  {line:"A colleague confidently corrects you, incorrectly, in front of a customer.", icon:"alert",
+   opts:[
+     {text:"Acknowledge them, quietly correct it after the interaction.", best:true, delta:8, reaction:"No public friction."},
+     {text:"Correct them in front of everyone.", best:false, delta:-8, reaction:"The room feels it."},
+     {text:"Let the wrong information stand.", best:false, delta:-10, reaction:"The error repeats later."}
+   ]},
+  {line:"A colleague says: \"People are basically stupid.\"", icon:"face",
+   opts:[
+     {text:"Remind yourself it's not personal, it's a reaction to a service gap.", best:true, delta:8, reaction:"You stay level for the next customer."},
+     {text:"Agree out loud, in front of customers.", best:false, delta:-10, reaction:"The mindset spreads, unchecked."},
+     {text:"Say nothing and let it sit.", best:false, delta:-4, reaction:"Quietly normalized."}
+   ]}
+];
+
+var callsReps = [
+  {title:"Phone: Scam Report", icon:"phone", color:"var(--bad)",
+   scene:"An elderly resident calls, shaken, after a scam caller tried to get her banking details.",
+   opts:[
+     {tag:"Log & Reassure", text:"Greet properly, log her details, explain next steps.", best:true, delta:18, reaction:"\"Oh, thank you. That helps.\""},
+     {tag:"Brush Off", text:"\"Yeah?\" Tell her to just block the number.", best:false, delta:-15, reaction:"\"That's it?\" She sounds defeated."},
+     {tag:"Unexplained Transfer", text:"Transfer her without explaining why.", best:false, delta:-8, reaction:"\"Wait, who is this now?\""}
+   ]},
+  {title:"Phone: Language Barrier", icon:"globe", color:"var(--plum)",
+   scene:"A caller is struggling in English, more frustrated with every attempt.",
+   opts:[
+     {tag:"Interpreter", text:"Arrange interpreter support before continuing.", best:true, delta:18, reaction:"\"...Yes please, that helps.\""},
+     {tag:"Talk Louder", text:"Talk slower and louder in English.", best:false, delta:-10, reaction:"Frustration grows."},
+     {tag:"Defer", text:"Ask them to call back with a translator.", best:false, delta:-15, reaction:"Call ends, unresolved."}
+   ]},
+  {title:"On Scene", icon:"shield", color:"var(--steel)",
+   scene:"At the follow-up visit, she asks if the scammer will be caught quickly.",
+   opts:[
+     {tag:"Honest Timeline", text:"Explain the real process and timeline, honestly.", best:true, delta:18, reaction:"She appreciates knowing what to expect."},
+     {tag:"False Promise", text:"Promise a quick arrest.", best:false, delta:-15, reaction:"That promise won't hold up."},
+     {tag:"Rush Through", text:"Finish the report and leave quickly.", best:false, delta:-8, reaction:"Feels rushed, low-care."}
+   ]},
+  {title:"Victim Follow-up", icon:"heart", color:"var(--good)",
+   scene:"A week later: how do you check in, and what do you share if a colleague asks?",
+   opts:[
+     {tag:"Protect & Follow Up", text:"Offer a face-to-face check-in, keep her file private.", best:true, delta:18, reaction:"\"Thank you for checking on me.\""},
+     {tag:"Skip It", text:"Skip follow-up, the report's already filed.", best:false, delta:-18, reaction:"Trust quietly erodes."},
+     {tag:"Share Details", text:"Mention her case to the colleague who asked.", best:false, delta:-15, reaction:"Her details are now somewhere they shouldn't be."}
+   ]}
+];
+
+var standardsReps = [
+  {q:"Officers should make exceptions to fair treatment based on a person's lifestyle choices.", answer:false, explain:"No discrimination for personal life choices."},
+  {q:"Police can act in ways that would be offenses for civilians, but only within defined rules.", answer:true, explain:"That authority comes with defined, monitored limits."},
+  {q:"A well-pressed uniform has no real bearing on professionalism.", answer:false, explain:"Uniform condition is a condition of employment, tied to trust."},
+  {q:"Officers should avoid interpreter services to keep things simple.", answer:false, explain:"The guidance is the opposite: actively seek interpreter support."}
+];
+
+var pieData = [
+  {label:"Rude or discourteous service", pct:68, color:"#C24D71"},
+  {label:"Dissatisfied with service", pct:14, color:"#B52A3C"},
+  {label:"Competitive reasons", pct:9, color:"#5D4478"},
+  {label:"Other relationships", pct:5, color:"#1B663B"},
+  {label:"Relocated", pct:3, color:"#824B73"},
+  {label:"Other", pct:1, color:"#6B4E5E"}
+];
+
+var quizQuestions = [
+  {q:"Which person is NOT considered a customer under this framework?", choices:["A witness","A victim","A person under arrest","A fellow officer"], correct:2},
+  {q:"What is the target time to solve or identify a customer's issue?", choices:["Ten minutes or less","Three minutes or less","One minute or less","No target"], correct:1},
+  {q:"In the ABCs, what does \"B\" stand for?", choices:["Body language","Business knowledge","Bias awareness","Better service"], correct:1},
+  {q:"What percentage of customers leave due to rude or discourteous service?", choices:["14%","9%","68%","5%"], correct:2},
+  {q:"Which phrase builds trust rather than damaging it?", choices:["You don't understand.","I understand how you feel.","That's not my job.","You'll have to.."], correct:1},
+  {q:"Which step means going neutral and unemotional when a customer is still irate?", choices:["Apologize","Computer Mode","Appreciate","Assertive"], correct:1},
+  {q:"With a suspicious customer, what should you establish first?", choices:["Your credibility","Their identity","A time limit","Nothing, just proceed"], correct:0},
+  {q:"True or False: Older victims may prefer face-to-face contact during follow-up.", choices:["True","False"], correct:0},
+  {q:"What should you never do regarding a victim's identity?", choices:["Record it in the file","Reveal it without authorization","Ask for it twice","Confirm with a supervisor"], correct:1},
+  {q:"Why does flexibility matter for people with disabilities at reception?", choices:["Optional but nice","They may have access or communication needs","Speeds up paperwork","Only matters on the phone"], correct:1},
+  {q:"Which pillar refers to how something is said, not what is said?", choices:["Action","Tone","Interest","Verbal"], correct:1},
+  {q:"\"People are basically stupid\" is an example of what?", choices:["A managing-yourself principle","A common excuse for service lapses","A pillar of service","A reception duty"], correct:1},
+  {q:"Second most common reason customers leave, after rude service?", choices:["Relocation","Dissatisfaction with service","Competitive reasons","Other relationships"], correct:1},
+  {q:"True or False: Officers should avoid interpreter services to keep things simple.", choices:["True","False"], correct:1}
+];
+
+var categories = [
+  {id:"basics", title:"The Basics", icon:"shield", color:"var(--steel)", blurb:"Who's a customer, the pillars, the rules"},
+  {id:"words", title:"The Right Words", icon:"speech", color:"var(--brass)", blurb:"Phrases that build trust vs break it"},
+  {id:"people", title:"Five Difficult Customers", icon:"face", color:"var(--plum)", blurb:"Talkative, angry, know-it-all, indecisive, suspicious"},
+  {id:"excuses", title:"Excuses & Composure", icon:"cpu", color:"var(--warn)", blurb:"Staying level when things go wrong"},
+  {id:"calls", title:"Calls & Victim Care", icon:"phone", color:"var(--bad)", blurb:"Phone, scene response, follow-up"},
+  {id:"standards", title:"Standards", icon:"star", color:"var(--good)", blurb:"Diversity, ethics, professionalism"},
+  {id:"leave", title:"Why They Leave", icon:"pie", color:"var(--steel)", blurb:"The numbers behind bad service"}
+];
+
+/* ---------------- CONFIDENCE METER ---------------- */
+function applyDelta(delta){
+  state.confidence = Math.max(0, Math.min(100, state.confidence + delta));
+  state.trace.push(state.confidence);
+  persist();
+}
+function meterHtml(){
+  return '<div class="meter-wrap"><div class="meter-head"><span>CONFIDENCE</span><span>'+state.confidence+'</span></div>' +
+    '<div class="meter-track"><div class="meter-fill" style="width:'+state.confidence+'%;"></div></div></div>';
+}
+function moodFor(delta){ return delta>=10 ? "happy" : (delta<=-8 ? "sad" : "neutral"); }
+function moodHtml(delta){
+  var m = moodFor(delta);
+  return '<div class="mood '+m+'">'+icon(m,24)+'</div>';
+}
+
+/* ---------------- HEADER ---------------- */
+function renderHeader(title, showBack){
+  var html = '';
+  if(showBack){ html += '<button class="back-btn" id="backBtn">'+icon("back",18)+'</button>'; }
+  html += '<h1>'+title+'</h1>';
+  document.getElementById("appHeader").innerHTML = html;
+  if(showBack){ document.getElementById("backBtn").addEventListener("click", goHome); }
+}
+function goHome(){ view="home"; activeCategory=null; renderAll(); }
+
+/* ---------------- HOME ---------------- */
+function renderHome(){
+  renderHeader("Customer Service in Policing", false);
+  var doneCount = categories.filter(function(c){return state.categoryProgress[c.id];}).length;
+  var html = '<div class="home-intro"><h2>Module 1</h2><p>'+doneCount+' of '+categories.length+' topics complete. Tap one to start.</p>' +
+    '<a href="index.html" style="display:inline-block; margin-top:8px; font-family:\'JetBrains Mono\',monospace; font-size:12px; color:var(--text-dim); text-decoration:none; border:1px solid var(--grid); padding:5px 10px; border-radius:8px;">&larr; All Modules</a></div>';
+  html += '<div class="tile-grid">';
+  categories.forEach(function(c){
+    var done = state.categoryProgress[c.id];
+    html += '<div class="tile" data-cat="'+c.id+'">' +
+      '<div class="tile-icon" style="background:'+c.color+'15; color:'+c.color+';">'+icon(c.icon,26)+'</div>' +
+      '<div class="tile-body"><h3>'+c.title+'</h3><p>'+c.blurb+'</p></div>' +
+      '<div class="tile-check '+(done?"done":"")+'">'+(done?icon("check",13):"")+'</div></div>';
+  });
+  html += '</div>';
+  var quizDone = state.quizScore !== null;
+  html += '<div class="tile" data-cat="final" style="margin-top:14px; border-color:var(--brass-dim);">' +
+    '<div class="tile-icon" style="background:#FCEFE2; color:var(--brass);">'+icon("bolt",26)+'</div>' +
+    '<div class="tile-body"><h3>Final Check</h3><p>14 quick questions, see what stuck</p></div>' +
+    '<div class="tile-check '+(quizDone?"done":"")+'">'+(quizDone?icon("check",13):"")+'</div></div>';
+  document.getElementById("mainView").innerHTML = html;
+  Array.prototype.forEach.call(document.querySelectorAll(".tile"), function(t){
+    t.addEventListener("click", function(){
+      var cat = t.getAttribute("data-cat");
+      if(cat === "final"){ view = "final"; } else { view = cat; repIndex = 0; }
+      renderAll();
+    });
+  });
+}
+
+/* ---------------- BASICS ---------------- */
+function renderBasics(){
+  renderHeader("The Basics", true);
+  var html = '<div style="margin-bottom:20px;"><p class="lede">Customers are: residents, victims, witnesses, colleagues. Not customers: persons under arrest.</p></div>';
+  
+  html += '<div class="card" style="margin-bottom:14px;"><h3 class="sub">Six Pillars of Service</h3><div class="chip-wrap">' +
+    pillars.map(function(p){ return '<div class="chip"><span class="ic">'+icon(p.icon,15)+'</span>'+p.label+'</div>'; }).join('') + '</div></div>';
+  
+  html += '<div class="card" style="margin-bottom:14px;"><h3 class="sub">The ABCs</h3><div class="chip-wrap">' +
+    '<div class="chip steel"><span class="ic">'+icon("face",15)+'</span>A: Attitude</div>' +
+    '<div class="chip steel"><span class="ic">'+icon("cpu",15)+'</span>B: Business Knowledge</div>' +
+    '<div class="chip steel"><span class="ic">'+icon("heart",15)+'</span>C: Customer-Oriented</div></div></div>';
+  
+  html += '<div class="card" style="margin-bottom:14px;"><h3 class="sub">The 123 Rule</h3><div class="chip-wrap">' +
+    '<div class="chip"><span class="ic">'+icon("person",15)+'</span>One at a time</div>' +
+    '<div class="chip"><span class="ic">'+icon("loop",15)+'</span>Two-way exchange</div>' +
+    '<div class="chip"><span class="ic">'+icon("bolt",15)+'</span>Three minutes max</div></div></div>';
+  
+  html += '<div class="card" style="margin-bottom:14px;"><h3 class="sub">What Customers Want</h3><div class="chip-wrap">' +
+    ['Reliability','Responsiveness','Assurance','Empathy','Follow-up'].map(function(w){return '<div class="chip"><span class="ic">'+icon("star",15)+'</span>'+w+'</div>';}).join('') + '</div></div>';
+  
+  html += '<div class="card"><h3 class="sub">Quick Check</h3><p style="color:var(--text-dim); font-size:13.5px; margin-bottom:12px;">Tap each item to identify whether it is or is not a customer.</p>';
+  html += '<div id="sortList">' + basicsSort.map(function(item,i){ return '<div class="tap-item" data-i="'+i+'"><span>'+item.label+'</span><span class="tag-area"></span></div>'; }).join('') + '</div>';
+  html += '</div>';
+  
+  html += '<button class="btn" id="doneBasics" style="margin-top:14px;">Mark Topic Complete</button>';
+  document.getElementById("mainView").innerHTML = html;
+  Array.prototype.forEach.call(document.querySelectorAll("#sortList .tap-item"), function(el){
+    el.addEventListener("click", function(){
+      if(el.dataset.answered) return;
+      el.dataset.answered = "1";
+      var item = basicsSort[parseInt(el.getAttribute("data-i"),10)];
+      el.classList.add(item.yes ? "right" : "wrong");
+      el.querySelector(".tag-area").innerHTML = '<span class="tag '+(item.yes?"yes":"no")+'">'+(item.yes?"Customer":"Not a customer")+'</span>';
+    });
+  });
+  document.getElementById("doneBasics").addEventListener("click", function(){
+    state.categoryProgress.basics = true; persist(); goHome();
+  });
+}
+
+/* ---------------- WORDS ---------------- */
+function renderWords(){
+  renderHeader("The Right Words", true);
+  var rep = wordsReps[repIndex];
+  var html = '<div class="dots">' + wordsReps.map(function(_,i){return '<span class="'+(i<repIndex?"done":"")+'"></span>';}).join('') + '</div>';
+  html += '<div class="card" style="margin-top:10px;">';
+  html += '<div class="scene-title">They say</div><div class="line" style="color:var(--bad); font-style:italic; font-weight:700;">"'+rep.neg+'"</div>';
+  html += '<div id="optArea">' + rep.opts.map(function(o,i){ return '<button class="opt" data-i="'+i+'">'+o+'</button>'; }).join('') + '</div>';
+  html += '<div id="fbArea"></div>';
+  html += '</div>';
+  html += '<button class="btn secondary" id="nextRep" disabled>Next</button>';
+  document.getElementById("mainView").innerHTML = html;
+  var answered = false;
+  Array.prototype.forEach.call(document.querySelectorAll("#optArea .opt"), function(btn){
+    btn.addEventListener("click", function(){
+      if(answered) return; answered = true;
+      var i = parseInt(btn.getAttribute("data-i"),10);
+      var correct = i === rep.correct;
+      btn.classList.add(correct ? "good" : "bad");
+      Array.prototype.forEach.call(document.querySelectorAll("#optArea .opt"), function(b){ if(b!==btn) b.setAttribute("disabled-look",""); });
+      document.getElementById("fbArea").innerHTML = '<div class="feedback-row">' + moodHtml(correct?15:-10) + '<div class="reaction">'+rep.explain+'</div></div>';
+      document.getElementById("nextRep").disabled = false;
+    });
+  });
+  document.getElementById("nextRep").addEventListener("click", function(){
+    repIndex++;
+    if(repIndex >= wordsReps.length){ state.categoryProgress.words = true; persist(); goHome(); }
+    else { renderAll(); }
+  });
+}
+
+/* ---------------- PEOPLE ---------------- */
+function renderPeople(){
+  renderHeader("Five Difficult Customers", true);
+  var rep = peopleReps[repIndex];
+  var html = '<div class="dots">' + peopleReps.map(function(_,i){return '<span class="'+(i<repIndex?"done":"")+'"></span>';}).join('') + '</div>';
+  html += meterHtml();
+  html += '<div class="card" style="margin-top:10px;">';
+  html += '<div class="scene-row"><div class="avatar" style="background:'+rep.color+'; font-weight:700;">'+icon(rep.icon,26)+'</div><div><div class="scene-title" style="color:'+rep.color+'; font-weight:700; font-size:15px;">'+rep.name+'</div></div></div>';
+  html += '<div class="line">'+rep.scene+'</div>';
+  html += '<div class="diag-row"><div class="diag-chip"><div class="l">Tone</div><div class="v">'+rep.tone+'</div></div><div class="diag-chip"><div class="l">Heat</div><div class="v">'+rep.heat+'</div></div></div>';
+  html += '<div id="optArea">' + rep.opts.map(function(o,i){ return '<button class="opt" data-i="'+i+'"><strong style="color:var(--text-dim)">'+o.tag+'</strong><br>'+o.text+'</button>'; }).join('') + '</div>';
+  html += '<div id="fbArea"></div></div>';
+  html += '<button class="btn secondary" id="nextRep" disabled>Next</button>';
+  document.getElementById("mainView").innerHTML = html;
+  var answered = false;
+  Array.prototype.forEach.call(document.querySelectorAll("#optArea .opt"), function(btn){
+    btn.addEventListener("click", function(){
+      if(answered) return; answered = true;
+      var i = parseInt(btn.getAttribute("data-i"),10);
+      var opt = rep.opts[i];
+      btn.classList.add(opt.best ? "good" : "bad");
+      Array.prototype.forEach.call(document.querySelectorAll("#optArea .opt"), function(b){ if(b!==btn) b.setAttribute("disabled-look",""); });
+      applyDelta(opt.delta);
+      document.getElementById("fbArea").innerHTML = '<div class="feedback-row">' + moodHtml(opt.delta) + '<div class="reaction">'+opt.reaction+'</div></div>';
+      document.getElementById("nextRep").disabled = false;
+    });
+  });
+  document.getElementById("nextRep").addEventListener("click", function(){
+    repIndex++;
+    if(repIndex >= peopleReps.length){ state.categoryProgress.people = true; persist(); goHome(); }
+    else { renderAll(); }
+  });
+}
+
+/* ---------------- EXCUSES ---------------- */
+function renderExcuses(){
+  renderHeader("Excuses & Composure", true);
+  var rep = excusesReps[repIndex];
+  var html = '<div class="dots">' + excusesReps.map(function(_,i){return '<span class="'+(i<repIndex?"done":"")+'"></span>';}).join('') + '</div>';
+  html += meterHtml();
+  html += '<div class="card" style="margin-top:10px;">';
+  html += '<div class="scene-row"><div class="avatar" style="background:var(--panel-2); color:var(--warn);">'+icon(rep.icon,26)+'</div></div>';
+  html += '<div class="line">'+rep.line+'</div>';
+  html += '<div id="optArea">' + rep.opts.map(function(o,i){ return '<button class="opt" data-i="'+i+'">'+o.text+'</button>'; }).join('') + '</div>';
+  html += '<div id="fbArea"></div></div>';
+  html += '<button class="btn secondary" id="nextRep" disabled>Next</button>';
+  document.getElementById("mainView").innerHTML = html;
+  var answered = false;
+  Array.prototype.forEach.call(document.querySelectorAll("#optArea .opt"), function(btn){
+    btn.addEventListener("click", function(){
+      if(answered) return; answered = true;
+      var i = parseInt(btn.getAttribute("data-i"),10);
+      var opt = rep.opts[i];
+      btn.classList.add(opt.best ? "good" : "bad");
+      Array.prototype.forEach.call(document.querySelectorAll("#optArea .opt"), function(b){ if(b!==btn) b.setAttribute("disabled-look",""); });
+      applyDelta(opt.delta);
+      document.getElementById("fbArea").innerHTML = '<div class="feedback-row">' + moodHtml(opt.delta) + '<div class="reaction">'+opt.reaction+'</div></div>';
+      document.getElementById("nextRep").disabled = false;
+    });
+  });
+  document.getElementById("nextRep").addEventListener("click", function(){
+    repIndex++;
+    if(repIndex >= excusesReps.length){ state.categoryProgress.excuses = true; persist(); goHome(); }
+    else { renderAll(); }
+  });
+}
+
+/* ---------------- CALLS ---------------- */
+function renderCalls(){
+  renderHeader("Calls & Victim Care", true);
+  var rep = callsReps[repIndex];
+  var html = '<div class="dots">' + callsReps.map(function(_,i){return '<span class="'+(i<repIndex?"done":"")+'"></span>';}).join('') + '</div>';
+  html += meterHtml();
+  html += '<div class="card" style="margin-top:10px;">';
+  html += '<div class="scene-row"><div class="avatar" style="background:'+rep.color+';">'+icon(rep.icon,26)+'</div><div><div class="scene-title" style="color:'+rep.color+'; font-weight:700;">'+rep.title+'</div></div></div>';
+  html += '<div class="line">'+rep.scene+'</div>';
+  html += '<div id="optArea">' + rep.opts.map(function(o,i){ return '<button class="opt" data-i="'+i+'"><strong style="color:var(--text-dim)">'+o.tag+'</strong><br>'+o.text+'</button>'; }).join('') + '</div>';
+  html += '<div id="fbArea"></div></div>';
+  html += '<button class="btn secondary" id="nextRep" disabled>Next</button>';
+  document.getElementById("mainView").innerHTML = html;
+  var answered = false;
+  Array.prototype.forEach.call(document.querySelectorAll("#optArea .opt"), function(btn){
+    btn.addEventListener("click", function(){
+      if(answered) return; answered = true;
+      var i = parseInt(btn.getAttribute("data-i"),10);
+      var opt = rep.opts[i];
+      btn.classList.add(opt.best ? "good" : "bad");
+      Array.prototype.forEach.call(document.querySelectorAll("#optArea .opt"), function(b){ if(b!==btn) b.setAttribute("disabled-look",""); });
+      applyDelta(opt.delta);
+      document.getElementById("fbArea").innerHTML = '<div class="feedback-row">' + moodHtml(opt.delta) + '<div class="reaction">'+opt.reaction+'</div></div>';
+      document.getElementById("nextRep").disabled = false;
+    });
+  });
+  document.getElementById("nextRep").addEventListener("click", function(){
+    repIndex++;
+    if(repIndex >= callsReps.length){ state.categoryProgress.calls = true; persist(); goHome(); }
+    else { renderAll(); }
+  });
+}
+
+/* ---------------- STANDARDS ---------------- */
+function renderStandards(){
+  renderHeader("Standards", true);
+  var html = '<p class="lede">Tap True or False for each.</p>';
+  html += standardsReps.map(function(s,i){
+    return '<div class="tf-item" data-i="'+i+'"><p style="font-weight:500;">'+s.q+'</p><div class="tf-buttons">' +
+      '<button class="tf-btn" data-val="true">True</button><button class="tf-btn" data-val="false">False</button></div>' +
+      '<div class="tf-explain">'+s.explain+'</div></div>';
+  }).join('');
+  html += '<button class="btn" id="doneStandards" disabled>Mark Topic Complete</button>';
+  document.getElementById("mainView").innerHTML = html;
+  var answeredCount = 0;
+  Array.prototype.forEach.call(document.querySelectorAll(".tf-item"), function(item){
+    var idx = parseInt(item.getAttribute("data-i"),10);
+    var s = standardsReps[idx];
+    Array.prototype.forEach.call(item.querySelectorAll(".tf-btn"), function(btn){
+      btn.addEventListener("click", function(){
+        if(item.dataset.answered) return;
+        item.dataset.answered = "1";
+        var val = btn.getAttribute("data-val") === "true";
+        var correct = val === s.answer;
+        btn.classList.add(correct ? "sel-good" : "sel-bad");
+        item.querySelector(".tf-explain").classList.add("show");
+        answeredCount++;
+        if(answeredCount === standardsReps.length){ document.getElementById("doneStandards").disabled = false; }
+      });
+    });
+  });
+  document.getElementById("doneStandards").addEventListener("click", function(){
+    state.categoryProgress.standards = true; persist(); goHome();
+  });
+}
+
+/* ---------------- LEAVE (PIE) ---------------- */
+function renderLeave(){
+  renderHeader("Why They Leave", true);
+  var html = '<p class="lede">What actually drives customers away.</p>';
+  html += '<div class="card pie-wrap"><svg width="160" height="160" viewBox="0 0 160 160" id="pieSvg" style="display:block; margin:0 auto;"></svg>' +
+    '<div class="pie-legend">' + pieData.map(function(s){ return '<div><span class="swatch" style="background:'+s.color+';"></span>'+s.label+' &middot; '+s.pct+'%</div>'; }).join('') + '</div></div>';
+  html += '<button class="btn" id="doneLeave">Mark Topic Complete</button>';
+  document.getElementById("mainView").innerHTML = html;
+  var svg = document.getElementById("pieSvg");
+  var ns = "http://www.w3.org/2000/svg";
+  var r = 60, cx = 80, cy = 80, circumference = 2*Math.PI*r, acc = 0;
+  pieData.forEach(function(seg){
+    var len = (seg.pct/100)*circumference;
+    var c = document.createElementNS(ns,"circle");
+    c.setAttribute("r",r); c.setAttribute("cx",cx); c.setAttribute("cy",cy);
+    c.setAttribute("fill","none"); c.setAttribute("stroke",seg.color); c.setAttribute("stroke-width","26");
+    c.setAttribute("stroke-dasharray", len+" "+(circumference-len));
+    c.setAttribute("stroke-dashoffset", -acc);
+    c.setAttribute("transform","rotate(-90 "+cx+" "+cy+")");
+    svg.appendChild(c);
+    acc += len;
+  });
+  document.getElementById("doneLeave").addEventListener("click", function(){
+    state.categoryProgress.leave = true; persist(); goHome();
+  });
+}
+
+/* ---------------- FINAL QUIZ ---------------- */
+function renderFinal(){
+  if(state.quizScore !== null){ renderResult(state.quizScore); return; }
+  renderHeader("Final Check", true);
+  var html = '<p class="lede">14 questions. 70% or higher to pass.</p><div id="quizArea"></div>' +
+    '<button class="btn" id="submitQuiz">Submit</button>';
+  document.getElementById("mainView").innerHTML = html;
+  var area = document.getElementById("quizArea");
+  var answers = new Array(quizQuestions.length).fill(null);
+  quizQuestions.forEach(function(q, qi){
+    var block = document.createElement("div");
+    block.style.marginBottom = "16px";
+    block.innerHTML = '<p style="font-weight:600; font-size:15.5px; margin-bottom:8px;">'+(qi+1)+'. '+q.q+'</p>';
+    var optsWrap = document.createElement("div");
+    q.choices.forEach(function(choice, ci){
+      var b = document.createElement("button");
+      b.className = "opt"; b.textContent = choice;
+      b.addEventListener("click", function(){
+        Array.prototype.forEach.call(optsWrap.children, function(x){ x.classList.remove("good"); });
+        b.classList.add("good");
+        answers[qi] = ci;
+      });
+      optsWrap.appendChild(b);
+    });
+    block.appendChild(optsWrap);
+    area.appendChild(block);
+  });
+  document.getElementById("submitQuiz").addEventListener("click", function(){
+    var unanswered = answers.indexOf(null);
+    if(unanswered !== -1){ alert("Question "+(unanswered+1)+" still needs an answer."); return; }
+    var correct = 0;
+    quizQuestions.forEach(function(q,qi){ if(answers[qi]===q.correct) correct++; });
+    var pct = Math.round((correct/quizQuestions.length)*100);
+    state.quizScore = pct; persist();
+    scormSet("cmi.score.raw", pct);
+    scormSet("cmi.completion_status", pct>=70?"completed":"incomplete");
+    renderResult(pct);
+  });
+}
+
+
+function renderResult(pct){
+  renderHeader("Final Check", true);
+  var pass = pct >= 70;
+  var html = '<div class="result-card '+(pass?"":"fail")+'">' + moodHtml(pass?15:-10) +
+    '<div class="result-score">'+pct+'%</div><p>'+(pass?"Nice work, that stuck.":"Worth another pass through the topics.")+'</p></div>';
+  document.getElementById("mainView").innerHTML = html;
+  if(!pass){
+    var retryBtn = document.createElement("button"); retryBtn.className = "btn secondary"; retryBtn.textContent = "Retake";
+    document.getElementById("mainView").appendChild(retryBtn);
+    retryBtn.addEventListener("click", function(){ state.quizScore = null; persist(); renderAll(); });
+  }
+}
+
+/* ---------------- MASTER ---------------- */
+function renderAll(){
+  if(view === "home") renderHome();
+  else if(view === "basics") renderBasics();
+  else if(view === "words") renderWords();
+  else if(view === "people") renderPeople();
+  else if(view === "excuses") renderExcuses();
+  else if(view === "calls") renderCalls();
+  else if(view === "standards") renderStandards();
+  else if(view === "leave") renderLeave();
+  else if(view === "final") renderFinal();
+}
+renderAll();
+})();
+</script>
+</body>
+</html>
