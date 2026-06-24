@@ -509,6 +509,12 @@ function renderResult(pct, answers){
   }
   
   document.getElementById("mainView").innerHTML = html;
+  var allModulesBtn = document.createElement("button");
+  allModulesBtn.className = "btn";
+  allModulesBtn.textContent = "All Modules";
+  document.getElementById("mainView").appendChild(allModulesBtn);
+  allModulesBtn.addEventListener("click", function(){ window.location.href = "index.html"; });
+  
   if(!pass){
     var retryBtn = document.createElement("button");
     retryBtn.className = "btn secondary";
