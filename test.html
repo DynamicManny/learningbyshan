@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Shan's Training Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F9F5F0; --panel:#FFFFFF; --grid:#E8DFD7;
+  --text:#2D2D2D; --text-dim:#6B6B6B; --text-dimmer:#9B9B9B;
+}
+*{box-sizing:border-box;}
+html,body{margin:0; background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; font-size:17px; line-height:1.5;}
+
+.app{max-width:600px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column;}
+
+header{padding:40px 24px 24px; text-align:center; border-bottom:1px solid var(--grid);}
+header h1{font-size:26px; margin:0 0 8px 0; font-weight:700;}
+header p{color:var(--text-dim); font-size:15px; margin:0; font-weight:500;}
+
+main{flex:1; padding:24px 16px 40px;}
+
+.intro-box{background:var(--panel); border:1px solid var(--grid); border-radius:16px; padding:20px; margin-bottom:28px; text-align:center;}
+.intro-box h2{font-size:18px; margin:0 0 8px 0; font-weight:700;}
+.intro-box p{color:var(--text-dim); font-size:14.5px; margin:0; line-height:1.6;}
+
+.module-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-bottom:28px;}
+
+.module-card{background:var(--panel); border:1px solid var(--grid); border-radius:16px; overflow:hidden; display:flex; flex-direction:column; cursor:pointer; transition:border-color .15s, transform .15s;}
+.module-card:active{transform:translateY(-2px);}
+
+.module-header{padding:20px 16px; border-bottom:1px solid var(--grid);}
+.module-num{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1px; text-transform:uppercase; font-weight:700; margin-bottom:6px;}
+.module-title{font-size:18px; font-weight:700; margin:0;}
+
+.module-body{padding:16px;}
+.progress-track{height:6px; background:var(--grid); border-radius:4px; overflow:hidden; margin-bottom:12px;}
+.progress-fill{height:100%; transition:width .3s;}
+
+.status-badge{display:inline-block; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.5px; text-transform:uppercase; padding:4px 10px; border-radius:12px; font-weight:700; border:1px solid;}
+
+.badge-available{background:#F9F5F0; border-color:var(--grid); color:var(--text);}
+.badge-progress{border-color:#8B6B5F; color:#8B6B5F;}
+.badge-complete{border-color:#2C6B4B; color:#2C6B4B;}
+
+footer{text-align:center; padding:20px 16px; border-top:1px solid var(--grid); margin-top:auto;}
+.footer-text{font-size:13px; color:var(--text-dim); font-weight:500;}
+
+.floating-envelope{position:fixed; bottom:24px; right:24px; width:56px; height:56px; border-radius:50%; background:var(--text); color:var(--panel); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 4px 12px rgba(0,0,0,.15); transition:transform .2s, box-shadow .2s; z-index:100;}
+.floating-envelope:hover{transform:scale(1.1); box-shadow:0 6px 16px rgba(0,0,0,.2);}
+.floating-envelope:active{transform:scale(.95);}
+
+.modal{display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.5); z-index:1000; align-items:center; justify-content:center;}
+.modal.show{display:flex;}
+.modal-content{background:var(--panel); border-radius:20px; padding:32px 24px; max-width:320px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.15);}
+.modal-emoji{font-size:48px; margin-bottom:12px;}
+.modal-title{font-size:20px; font-weight:700; margin:0 0 12px 0;}
+.modal-text{color:var(--text-dim); font-size:15px; margin:0 0 20px 0; line-height:1.6;}
+.modal-btn{display:inline-block; background:var(--text); color:var(--panel); border:none; padding:10px 24px; border-radius:12px; font-weight:700; cursor:pointer; font-size:14px;}
+.modal-btn:hover{opacity:.9;}
+.modal-close{position:absolute; top:16px; right:16px; background:transparent; border:none; font-size:24px; cursor:pointer; color:var(--text-dim);}
+
+@media(max-width:600px){
+  .module-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Shan's Training Hub</h1>
+    <p>Five modules, built for you</p>
+  </header>
+  
+  <main>
+    <div class="intro-box">
+      <h2>Welcome</h2>
+      <p>Dive into each module at your own pace. Your progress saves automatically, so you can pick up where you left off anytime.</p>
+    </div>
+    
+    <div class="module-grid" id="moduleGrid"></div>
+  </main>
+  
+  <footer>
+    <p class="footer-text">Designed with care</p>
+  </footer>
+</div>
+
+<button class="floating-envelope" id="floatingBtn" title="A little note for you">💌</button>
+
+<div class="modal" id="easterModal">
+  <div class="modal-content">
+    <button class="modal-close" id="closeModal">✕</button>
+    <div class="modal-emoji" id="modalEmoji">💫</div>
+    <h2 class="modal-title" id="modalTitle">You're doing great</h2>
+    <p class="modal-text" id="modalText">Every module you complete is proof of your commitment to growth. Be proud of the effort. You've got this.</p>
+    <button class="modal-btn" id="modalOk">Got it</button>
+  </div>
+</div>
+
+<script>
+(function(){
+var messages = [
+  {emoji:"💕", title:"I'm so proud of you", text:"Like, genuinely. You're showing up, doing the work, facing things that are hard. That takes courage. I see you."},
+  {emoji:"🌟", title:"You deserve this", text:"You deserve to feel proud right now. Not someday when it's all done, but today, for trying. For being here. For caring enough to learn."},
+  {emoji:"💫", title:"Keep going", text:"I know it's not always easy. But you're doing it anyway. And that's the bravest thing. I'm rooting for you so hard."},
+  {emoji:"✨", title:"You're enough", text:"Right here, right now, exactly as you are. You're enough. Your effort matters. You matter."},
+  {emoji:"💚", title:"I believe in you", text:"More than you probably believe in yourself. You have what it takes. Trust yourself. I trust you."},
+  {emoji:"🌸", title:"You're becoming someone great", text:"Every module you finish is you choosing growth. You're not just learning—you're becoming more confident, more capable, more YOU."},
+  {emoji:"💝", title:"You're doing better than you think", text:"Seriously. Take a breath and give yourself credit. You're further along than you realize. Be gentle with yourself."},
+  {emoji:"🎯", title:"This is your win", text:"You're doing this for you. Not for anyone else. That's beautiful. Keep choosing yourself like this."},
+  {emoji:"💋", title:"You're worth the effort", text:"Every single module, every quiz, every moment you invest in yourself—it's worth it. Because you're worth it."},
+  {emoji:"🌹", title:"I'm in your corner", text:"Always. When it's hard, when it's easy, when you doubt yourself—I'm here. You've got this, and you've got me."},
+  {emoji:"💗", title:"You're doing amazingly", text:"The work you're putting in is real. The growth is real. You are doing so much better than you give yourself credit for."},
+  {emoji:"🌺", title:"Be proud of yourself", text:"You woke up. You showed up. You tried. That's everything. That's enough. You should be so proud."}
+];
+
+function safeGet(k){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):null; }catch(e){ return null; } }
+
+var modules = [
+  {id:"module-01", num:"01", title:"Customer Service in Policing", accent:"#C24D71", live:true},
+  {id:"module-02", num:"02", title:"Powers & Duties of Litter Prevention Wardens", accent:"#6B8E23", live:true},
+  {id:"module-03", num:"03", title:"Professional Ethics for General LEOs", accent:"#2C5AA0", live:true},
+  {id:"module-04", num:"04", title:"Observation & Note Taking", accent:"#D97634", live:true},
+  {id:"module-05", num:"05", title:"Overview of Law Enforcement in T&T", accent:"#5B4D7D", live:true}
+];
+
+var grid = document.getElementById("moduleGrid");
+
+function renderCards(){
+  grid.innerHTML = '';
+  modules.forEach(function(m){
+    var saved = safeGet(m.id + "_state");
+    var statusText = "Start", statusClass = "badge-available", progressPct = 0;
+    
+    if(saved){
+      if(saved.quizScore !== null && saved.quizScore !== undefined){
+        statusText = "Complete";
+        statusClass = "badge-complete";
+        progressPct = 100;
+      } else if(saved.categoryProgress){
+        var keys = Object.keys(saved.categoryProgress);
+        var doneN = keys.filter(function(k){ return saved.categoryProgress[k]; }).length;
+        if(doneN > 0){
+          statusText = Math.round((doneN/keys.length)*100) + "%";
+          statusClass = "badge-progress";
+          progressPct = Math.round((doneN/keys.length)*100);
+        }
+      }
+    }
+    
+    var card = document.createElement("div");
+    card.className = "module-card";
+    
+    card.innerHTML = 
+      '<div class="module-header" style="border-bottom-color:'+m.accent+';">' +
+      '<div class="module-num" style="color:'+m.accent+';">Module '+m.num+'</div>' +
+      '<h2 class="module-title">'+m.title+'</h2></div>' +
+      '<div class="module-body">' +
+      '<div class="progress-track"><div class="progress-fill" style="width:'+progressPct+'%; background:'+m.accent+';"></div></div>' +
+      '<span class="status-badge '+statusClass+'">'+statusText+'</span>' +
+      '</div>';
+    
+    card.addEventListener("click", function(){ window.location.href = m.id + ".html"; });
+    grid.appendChild(card);
+  });
+}
+
+renderCards();
+
+window.addEventListener("storage", function(e){
+  if(e.key && e.key.match(/^module-\d{2}_state$/)){
+    renderCards();
+  }
+});
+
+var modal = document.getElementById("easterModal");
+var floatingBtn = document.getElementById("floatingBtn");
+var closeBtn = document.getElementById("closeModal");
+var okBtn = document.getElementById("modalOk");
+
+function pickRandomMessage(){
+  var msg = messages[Math.floor(Math.random() * messages.length)];
+  document.getElementById("modalEmoji").textContent = msg.emoji;
+  document.getElementById("modalTitle").textContent = msg.title;
+  document.getElementById("modalText").textContent = msg.text;
+}
+
+floatingBtn.addEventListener("click", function(){ pickRandomMessage(); modal.classList.add("show"); });
+closeBtn.addEventListener("click", function(){ modal.classList.remove("show"); });
+okBtn.addEventListener("click", function(){ modal.classList.remove("show"); });
+modal.addEventListener("click", function(e){ if(e.target === modal) modal.classList.remove("show"); });
+})();
+</script>
+</body>
+</html>
