@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Module 1: Customer Service in Policing</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Inter:wght=400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#FBEEF1; --panel:#FFFFFF; --panel-2:#FDF1F4; --grid:#E6C5D0;
-  --text:#2D1F27; --text-dim:#6B4E5E; --text-dimmer:#8A687A;
-  --brass:#C24D71; --brass-dim:#9E3555; --steel:#5D4478; --plum:#824B73;
-  --warn:#A0541A; --bad:#B52A3C; --good:#1B663B;
+  --bg:#FBEEF1; --panel:#FFFFFF; --panel-2:#FDF1F4; --grid:#F0D9E1;
+  --text:#4A3540; --text-dim:#9B7C88; --text-dimmer:#C7AEB8;
+  --brass:#E58CA5; --brass-dim:#C96E89; --steel:#B79FD1; --plum:#C497B8;
+  --warn:#E3A06B; --bad:#D97A86; --good:#8FBFA0;
 }
 *{box-sizing:border-box;}
 html,body{margin:0; background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; font-size:17px; line-height:1.5;}
@@ -22,7 +22,7 @@ button{font-family:inherit;}
 .app{max-width:480px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column;}
 header{display:flex; align-items:center; gap:10px; padding:16px 16px 12px; position:sticky; top:0; background:var(--bg); z-index:5; border-bottom:1px solid var(--grid);}
 .back-btn{background:var(--panel-2); border:1px solid var(--grid); color:var(--text); width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;}
-header h1{font-size:16px; margin:0; flex:1; font-weight: 700;}
+header h1{font-size:16px; margin:0; flex:1;}
 .dots{display:flex; gap:5px;}
 .dots span{width:7px; height:7px; border-radius:50%; background:var(--grid);}
 .dots span.done{background:var(--brass);}
@@ -37,42 +37,42 @@ main{flex:1; padding:14px 16px 40px;}
 .tile:active{border-color:var(--brass-dim);}
 .tile-icon{width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
 .tile-body{flex:1; min-width:0;}
-.tile-body h3{margin:0 0 3px 0; font-size:16.5px; color: var(--text);}
+.tile-body h3{margin:0 0 3px 0; font-size:16.5px;}
 .tile-body p{margin:0; font-size:13.5px; color:var(--text-dim);}
 .tile-check{width:22px; height:22px; border-radius:50%; border:2px solid var(--grid); flex-shrink:0; display:flex; align-items:center; justify-content:center; color:var(--brass);}
 .tile-check.done{border-color:var(--brass); background:#FCEFE2;}
 
 h2.section-title{font-size:19px; margin:4px 0 4px 0;}
-p.lede{color:var(--text); font-size:15px; margin:0 0 16px 0; font-weight: 500;}
+p.lede{color:var(--text-dim); font-size:14.5px; margin:0 0 16px 0;}
 
 .chip-wrap{display:flex; flex-wrap:wrap; gap:7px; margin-bottom:16px;}
-.chip{display:flex; align-items:center; gap:6px; background:var(--panel); border:1px solid var(--grid); border-radius:18px; padding:7px 12px 7px 8px; font-size:13.5px; color: var(--text); font-weight: 500;}
+.chip{display:flex; align-items:center; gap:6px; background:var(--panel-2); border:1px solid var(--grid); border-radius:18px; padding:7px 12px 7px 8px; font-size:13.5px;}
 .chip .ic{color:var(--brass);}
 .chip.steel .ic{color:var(--steel);}
-h3.sub{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--steel); letter-spacing:.8px; text-transform:uppercase; margin:18px 0 8px 0; font-weight: 700;}
+h3.sub{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--steel); letter-spacing:.8px; text-transform:uppercase; margin:18px 0 8px 0;}
 
-.tap-item{display:flex; justify-content:space-between; align-items:center; gap:10px; background:var(--panel); border:1px solid var(--grid); border-radius:10px; padding:12px 14px; margin-bottom:8px; cursor:pointer; font-size:15.5px;}
-.tap-item .tag{font-family:'JetBrains Mono',monospace; font-size:11px; padding:4px 10px; border-radius:8px; flex-shrink:0; font-weight: 700;}
-.tap-item.right{border-color:var(--good); border-width: 2px;}
-.tap-item.wrong{border-color:var(--bad); border-width: 2px;}
-.tag.yes{background:#EAF6EE; color:var(--good); border: 1px solid var(--good);}
-.tag.no{background:#FCE9EA; color:var(--bad); border: 1px solid var(--bad);}
+.tap-item{display:flex; justify-content:space-between; align-items:center; gap:10px; background:var(--panel-2); border:1px solid var(--grid); border-radius:10px; padding:12px 14px; margin-bottom:8px; cursor:pointer; font-size:15.5px;}
+.tap-item .tag{font-family:'JetBrains Mono',monospace; font-size:11px; padding:3px 9px; border-radius:10px; flex-shrink:0;}
+.tap-item.right{border-color:var(--good);}
+.tap-item.wrong{border-color:var(--bad);}
+.tag.yes{background:#EAF6EE; color:var(--good);}
+.tag.no{background:#FCE9EA; color:var(--bad);}
 
 .card{background:var(--panel); border:1px solid var(--grid); border-radius:16px; padding:18px;}
 .scene-row{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
 .avatar{width:54px; height:54px; border-radius:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--bg);}
-.scene-title{font-size:13px; color:var(--text-dim); font-family:'JetBrains Mono',monospace; letter-spacing:.5px; text-transform:uppercase; font-weight: 700;}
-.line{font-size:17px; padding:13px 14px; background:var(--panel-2); border-radius:10px; margin-bottom:12px; border-left: 4px solid var(--brass);}
+.scene-title{font-size:13px; color:var(--text-dim); font-family:'JetBrains Mono',monospace; letter-spacing:.5px; text-transform:uppercase;}
+.line{font-size:17px; padding:13px 14px; background:var(--panel-2); border-radius:10px; margin-bottom:12px;}
 
 .diag-row{display:flex; gap:6px; margin-bottom:14px; flex-wrap:wrap;}
 .diag-chip{flex:1; min-width:90px; background:var(--panel-2); border:1px solid var(--grid); border-radius:8px; padding:7px 9px; font-size:12px;}
-.diag-chip .l{color:var(--text-dim); font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.5px; text-transform:uppercase; font-weight: 600;}
-.diag-chip .v{margin-top:2px; font-size:13px; font-weight: 600; color: var(--text);}
+.diag-chip .l{color:var(--text-dimmer); font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.5px; text-transform:uppercase;}
+.diag-chip .v{margin-top:2px; font-size:13px;}
 
-.opt{display:block; width:100%; text-align:left; background:var(--panel); border:1px solid var(--grid); border-radius:12px; padding:14px 15px; margin-bottom:9px; cursor:pointer; font-size:15.5px; color:var(--text); font-weight: 500;}
+.opt{display:block; width:100%; text-align:left; background:var(--panel-2); border:1px solid var(--grid); border-radius:12px; padding:14px 15px; margin-bottom:9px; cursor:pointer; font-size:15.5px; color:var(--text);}
 .opt:active{border-color:var(--brass-dim);}
-.opt.good{border-color:var(--good); background:#EAF6EE; color: var(--good); border-width: 2px;}
-.opt.bad{border-color:var(--bad); background:#FCE9EA; color: var(--bad); border-width: 2px;}
+.opt.good{border-color:var(--good); background:#EAF6EE;}
+.opt.bad{border-color:var(--bad); background:#FCE9EA;}
 .opt[disabled-look]{opacity:.35; pointer-events:none;}
 
 .feedback-row{display:flex; gap:12px; align-items:flex-start; margin-top:14px; padding-top:14px; border-top:1px dashed var(--grid);}
@@ -80,36 +80,36 @@ h3.sub{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--ste
 .mood.happy{background:#EAF6EE; color:var(--good);}
 .mood.neutral{background:#FCEFE2; color:var(--warn);}
 .mood.sad{background:#FCE9EA; color:var(--bad);}
-.reaction{font-size:15.5px; color:var(--text); font-style:italic; font-weight: 500;}
+.reaction{font-size:15.5px; color:var(--text-dim); font-style:italic;}
 
 .meter-wrap{margin:14px 0 4px; padding:10px 12px; background:var(--panel-2); border-radius:10px;}
-.meter-head{display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px; font-weight: 700;}
+.meter-head{display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;}
 .meter-track{height:7px; background:var(--grid); border-radius:4px; overflow:hidden;}
 .meter-fill{height:100%; background:var(--brass); transition:width .3s;}
 
-.btn{display:block; width:100%; font-family:'JetBrains Mono',monospace; font-size:13.5px; letter-spacing:.5px; text-transform:uppercase; background:var(--brass); color:#FFFFFF; border:none; padding:14px; cursor:pointer; border-radius:12px; margin-top:14px; font-weight: 700;}
-.btn:disabled{background:#E6C5D0; color:#8A687A;}
-.btn.secondary{background:var(--panel); border:1px solid var(--grid); color:var(--text);}
+.btn{display:block; width:100%; font-family:'JetBrains Mono',monospace; font-size:13.5px; letter-spacing:.5px; text-transform:uppercase; background:var(--brass); color:#3A1F2A; border:none; padding:14px; cursor:pointer; border-radius:12px; margin-top:14px;}
+.btn:disabled{background:#F0D9E1; color:#C7AEB8;}
+.btn.secondary{background:var(--panel-2); border:1px solid var(--grid); color:var(--text);}
 
 .pie-wrap{margin:10px 0;}
 .pie-legend{margin-top:12px; display:flex; flex-direction:column; gap:7px;}
-.pie-legend div{display:flex; align-items:center; gap:9px; font-size:14.5px; font-weight: 500;}
+.pie-legend div{display:flex; align-items:center; gap:9px; font-size:14.5px;}
 .swatch{width:12px; height:12px; border-radius:3px; flex-shrink:0;}
 
-.tf-item{background:var(--panel); border:1px solid var(--grid); border-radius:12px; padding:14px; margin-bottom:10px;}
+.tf-item{background:var(--panel-2); border:1px solid var(--grid); border-radius:12px; padding:14px; margin-bottom:10px;}
 .tf-item p{margin:0 0 10px 0; font-size:15.5px;}
 .tf-buttons{display:flex; gap:8px;}
-.tf-btn{flex:1; padding:10px; border-radius:9px; border:1px solid var(--grid); background:var(--panel); color:var(--text); font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:.5px; cursor:pointer; font-weight: 600;}
-.tf-btn.sel-good{border-color:var(--good); background:#EAF6EE; color: var(--good); border-width: 2px;}
-.tf-btn.sel-bad{border-color:var(--bad); background:#FCE9EA; color: var(--bad); border-width: 2px;}
-.tf-explain{margin-top:9px; font-size:13.5px; color:var(--text-dim); display:none; font-weight: 500;}
+.tf-btn{flex:1; padding:10px; border-radius:9px; border:1px solid var(--grid); background:var(--panel); color:var(--text); font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:.5px; cursor:pointer;}
+.tf-btn.sel-good{border-color:var(--good); background:#EAF6EE;}
+.tf-btn.sel-bad{border-color:var(--bad); background:#FCE9EA;}
+.tf-explain{margin-top:9px; font-size:13.5px; color:var(--text-dim); display:none;}
 .tf-explain.show{display:block;}
 
 .result-card{text-align:center; padding:30px 20px; border:2px solid var(--brass); background:#FCEDF1; border-radius:16px;}
-.result-card.fail { border-color:var(--bad); background:#FCE9EA; }
-.result-score{font-family:'JetBrains Mono',monospace; font-size:40px; color:var(--brass); margin:10px 0; font-weight: 700;}
+.result-card.fail{border-color:var(--bad); background:#FCE9EA;}
+.result-score{font-family:'JetBrains Mono',monospace; font-size:40px; color:var(--brass); margin:10px 0;}
 .result-card.fail .result-score{color:var(--bad);}
-footer{text-align:center; font-size:12px; color:var(--text-dim); padding:18px; font-family:'JetBrains Mono',monospace;}
+footer{text-align:center; font-size:12px; color:var(--text-dimmer); padding:18px; font-family:'JetBrains Mono',monospace;}
 </style>
 </head>
 <body>
@@ -152,7 +152,7 @@ function icon(name, size, strokeW){
 }
 
 /* ---------------- STORAGE ---------------- */
-var STORE_KEY = "module01_state";
+var STORE_KEY = "module-01_state";
 var memFallback = {};
 function safeGet(k){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):null; }catch(e){ return memFallback[k]||null; } }
 function safeSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){ memFallback[k]=v; } }
@@ -192,7 +192,6 @@ var wordsReps = [
   {neg:"I don't know.", opts:["I'll find out and get back to you.","That's not my department.","You'll have to ask someone else."], correct:0, explain:"This keeps the door open instead of closing it."}
 ];
 
-/* Accessibility Note: Darker high-contrast accent tones optimized for accessibility guidelines */
 var peopleReps = [
   {name:"Talkative", icon:"speech", color:"var(--steel)", tone:"Steady", heat:"Low",
    scene:"Complaining about a noise violation. Ten minutes in, still no actual incident time or location stated.",
@@ -291,12 +290,12 @@ var standardsReps = [
 ];
 
 var pieData = [
-  {label:"Rude or discourteous service", pct:68, color:"#C24D71"},
-  {label:"Dissatisfied with service", pct:14, color:"#B52A3C"},
-  {label:"Competitive reasons", pct:9, color:"#5D4478"},
-  {label:"Other relationships", pct:5, color:"#1B663B"},
-  {label:"Relocated", pct:3, color:"#824B73"},
-  {label:"Other", pct:1, color:"#6B4E5E"}
+  {label:"Rude or discourteous service", pct:68, color:"#E58CA5"},
+  {label:"Dissatisfied with service", pct:14, color:"#D97A86"},
+  {label:"Competitive reasons", pct:9, color:"#B79FD1"},
+  {label:"Other relationships", pct:5, color:"#8FBFA0"},
+  {label:"Relocated", pct:3, color:"#C497B8"},
+  {label:"Other", pct:1, color:"#C7AEB8"}
 ];
 
 var quizQuestions = [
@@ -317,13 +316,13 @@ var quizQuestions = [
 ];
 
 var categories = [
-  {id:"basics", title:"The Basics", icon:"shield", color:"var(--steel)", blurb:"Who's a customer, the pillars, the rules"},
-  {id:"words", title:"The Right Words", icon:"speech", color:"var(--brass)", blurb:"Phrases that build trust vs break it"},
-  {id:"people", title:"Five Difficult Customers", icon:"face", color:"var(--plum)", blurb:"Talkative, angry, know-it-all, indecisive, suspicious"},
-  {id:"excuses", title:"Excuses & Composure", icon:"cpu", color:"var(--warn)", blurb:"Staying level when things go wrong"},
-  {id:"calls", title:"Calls & Victim Care", icon:"phone", color:"var(--bad)", blurb:"Phone, scene response, follow-up"},
-  {id:"standards", title:"Standards", icon:"star", color:"var(--good)", blurb:"Diversity, ethics, professionalism"},
-  {id:"leave", title:"Why They Leave", icon:"pie", color:"var(--steel)", blurb:"The numbers behind bad service"}
+  {id:"basics", title:"The Basics", icon:"shield", color:"#B79FD1", blurb:"Who's a customer, the pillars, the rules"},
+  {id:"words", title:"The Right Words", icon:"speech", color:"#E58CA5", blurb:"Phrases that build trust vs break it"},
+  {id:"people", title:"Five Difficult Customers", icon:"face", color:"#C497B8", blurb:"Talkative, angry, know-it-all, indecisive, suspicious"},
+  {id:"excuses", title:"Excuses & Composure", icon:"cpu", color:"#E3A06B", blurb:"Staying level when things go wrong"},
+  {id:"calls", title:"Calls & Victim Care", icon:"phone", color:"#D97A86", blurb:"Phone, scene response, follow-up"},
+  {id:"standards", title:"Standards", icon:"star", color:"#8FBFA0", blurb:"Diversity, ethics, professionalism"},
+  {id:"leave", title:"Why They Leave", icon:"pie", color:"#B79FD1", blurb:"The numbers behind bad service"}
 ];
 
 /* ---------------- CONFIDENCE METER ---------------- */
@@ -357,13 +356,12 @@ function renderHome(){
   renderHeader("Customer Service in Policing", false);
   var doneCount = categories.filter(function(c){return state.categoryProgress[c.id];}).length;
   var html = '<div class="home-intro"><h2>Module 1</h2><p>'+doneCount+' of '+categories.length+' topics complete. Tap one to start.</p>' +
-    '<a href="./" style="display:inline-block; margin-top:8px; font-family:\'JetBrains Mono\',monospace; font-size:12px; color:var(--text-dim); text-decoration:none; border:1px solid var(--grid); padding:5px 10px; border-radius:8px;">&larr; All Modules</a></div>';
+    '<a href="index.html" style="display:inline-block; margin-top:8px; font-family:\'JetBrains Mono\',monospace; font-size:12px; color:var(--text-dim); text-decoration:none; border:1px solid var(--grid); padding:5px 10px; border-radius:8px;">&larr; All Modules</a></div>';
   html += '<div class="tile-grid">';
-  
   categories.forEach(function(c){
     var done = state.categoryProgress[c.id];
     html += '<div class="tile" data-cat="'+c.id+'">' +
-      '<div class="tile-icon" style="background:'+c.color+'15; color:'+c.color+';">'+icon(c.icon,26)+'</div>' +
+      '<div class="tile-icon" style="background:'+c.color+'22; color:'+c.color+';">'+icon(c.icon,26)+'</div>' +
       '<div class="tile-body"><h3>'+c.title+'</h3><p>'+c.blurb+'</p></div>' +
       '<div class="tile-check '+(done?"done":"")+'">'+(done?icon("check",13):"")+'</div></div>';
   });
@@ -415,7 +413,7 @@ function renderBasics(){
       if(el.dataset.answered) return;
       el.dataset.answered = "1";
       var item = basicsSort[parseInt(el.getAttribute("data-i"),10)];
-      el.classList.add(item.yes ? "right" : "wrong");
+      el.classList.add(item.yes ? "right" : "right");
       el.querySelector(".tag-area").innerHTML = '<span class="tag '+(item.yes?"yes":"no")+'">'+(item.yes?"Customer":"Not a customer")+'</span>';
     });
   });
@@ -430,7 +428,7 @@ function renderWords(){
   var rep = wordsReps[repIndex];
   var html = '<div class="dots">' + wordsReps.map(function(_,i){return '<span class="'+(i<repIndex?"done":"")+'"></span>';}).join('') + '</div>';
   html += '<div class="card" style="margin-top:10px;">';
-  html += '<div class="scene-title">They say</div><div class="line" style="color:var(--bad); font-style:italic; font-weight:700;">"'+rep.neg+'"</div>';
+  html += '<div class="scene-title">They say</div><div class="line" style="color:var(--bad); font-style:italic;">"'+rep.neg+'"</div>';
   html += '<div id="optArea">' + rep.opts.map(function(o,i){ return '<button class="opt" data-i="'+i+'">'+o+'</button>'; }).join('') + '</div>';
   html += '<div id="fbArea"></div>';
   html += '</div>';
@@ -462,10 +460,10 @@ function renderPeople(){
   var html = '<div class="dots">' + peopleReps.map(function(_,i){return '<span class="'+(i<repIndex?"done":"")+'"></span>';}).join('') + '</div>';
   html += meterHtml();
   html += '<div class="card" style="margin-top:10px;">';
-  html += '<div class="scene-row"><div class="avatar" style="background:'+rep.color+'; font-weight:700;">'+icon(rep.icon,26)+'</div><div><div class="scene-title" style="color:'+rep.color+'; font-weight:700; font-size:15px;">'+rep.name+'</div></div></div>';
+  html += '<div class="scene-row"><div class="avatar" style="background:'+rep.color+';">'+icon(rep.icon,26)+'</div><div><div class="scene-title">'+rep.name+'</div></div></div>';
   html += '<div class="line">'+rep.scene+'</div>';
   html += '<div class="diag-row"><div class="diag-chip"><div class="l">Tone</div><div class="v">'+rep.tone+'</div></div><div class="diag-chip"><div class="l">Heat</div><div class="v">'+rep.heat+'</div></div></div>';
-  html += '<div id="optArea">' + rep.opts.map(function(o,i){ return '<button class="opt" data-i="'+i+'"><strong style="color:var(--text-dim)">'+o.tag+'</strong><br>'+o.text+'</button>'; }).join('') + '</div>';
+  html += '<div id="optArea">' + rep.opts.map(function(o,i){ return '<button class="opt" data-i="'+i+'"><strong>'+o.tag+'</strong><br>'+o.text+'</button>'; }).join('') + '</div>';
   html += '<div id="fbArea"></div></div>';
   html += '<button class="btn secondary" id="nextRep" disabled>Next</button>';
   document.getElementById("mainView").innerHTML = html;
@@ -529,9 +527,9 @@ function renderCalls(){
   var html = '<div class="dots">' + callsReps.map(function(_,i){return '<span class="'+(i<repIndex?"done":"")+'"></span>';}).join('') + '</div>';
   html += meterHtml();
   html += '<div class="card" style="margin-top:10px;">';
-  html += '<div class="scene-row"><div class="avatar" style="background:'+rep.color+';">'+icon(rep.icon,26)+'</div><div><div class="scene-title" style="color:'+rep.color+'; font-weight:700;">'+rep.title+'</div></div></div>';
+  html += '<div class="scene-row"><div class="avatar" style="background:'+rep.color+';">'+icon(rep.icon,26)+'</div><div><div class="scene-title">'+rep.title+'</div></div></div>';
   html += '<div class="line">'+rep.scene+'</div>';
-  html += '<div id="optArea">' + rep.opts.map(function(o,i){ return '<button class="opt" data-i="'+i+'"><strong style="color:var(--text-dim)">'+o.tag+'</strong><br>'+o.text+'</button>'; }).join('') + '</div>';
+  html += '<div id="optArea">' + rep.opts.map(function(o,i){ return '<button class="opt" data-i="'+i+'"><strong>'+o.tag+'</strong><br>'+o.text+'</button>'; }).join('') + '</div>';
   html += '<div id="fbArea"></div></div>';
   html += '<button class="btn secondary" id="nextRep" disabled>Next</button>';
   document.getElementById("mainView").innerHTML = html;
@@ -560,7 +558,7 @@ function renderStandards(){
   renderHeader("Standards", true);
   var html = '<p class="lede">Tap True or False for each.</p>';
   html += standardsReps.map(function(s,i){
-    return '<div class="tf-item" data-i="'+i+'"><p style="font-weight:500;">'+s.q+'</p><div class="tf-buttons">' +
+    return '<div class="tf-item" data-i="'+i+'"><p>'+s.q+'</p><div class="tf-buttons">' +
       '<button class="tf-btn" data-val="true">True</button><button class="tf-btn" data-val="false">False</button></div>' +
       '<div class="tf-explain">'+s.explain+'</div></div>';
   }).join('');
