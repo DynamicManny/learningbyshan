@@ -71,7 +71,7 @@ footer{text-align:center; padding:20px 16px; border-top:1px solid var(--grid); m
 <div class="app">
   <header>
     <h1>Shan's Training Hub</h1>
-    <p>Built for the sweetest Trini in the entire republic </p>
+    <p>Five modules, built for you</p>
   </header>
   
   <main>
@@ -128,40 +128,52 @@ var modules = [
 ];
 
 var grid = document.getElementById("moduleGrid");
-modules.forEach(function(m){
-  var saved = safeGet(m.id + "_state");
-  var statusText = "Start", statusClass = "badge-available", progressPct = 0;
-  
-  if(saved){
-    if(saved.quizScore !== null && saved.quizScore !== undefined){
-      statusText = "Complete";
-      statusClass = "badge-complete";
-      progressPct = 100;
-    } else if(saved.categoryProgress){
-      var keys = Object.keys(saved.categoryProgress);
-      var doneN = keys.filter(function(k){ return saved.categoryProgress[k]; }).length;
-      if(doneN > 0){
-        statusText = Math.round((doneN/keys.length)*100) + "%";
-        statusClass = "badge-progress";
-        progressPct = Math.round((doneN/keys.length)*100);
+
+function renderCards(){
+  grid.innerHTML = '';
+  modules.forEach(function(m){
+    var saved = safeGet(m.id + "_state");
+    var statusText = "Start", statusClass = "badge-available", progressPct = 0;
+    
+    if(saved){
+      if(saved.quizScore !== null && saved.quizScore !== undefined){
+        statusText = "Complete";
+        statusClass = "badge-complete";
+        progressPct = 100;
+      } else if(saved.categoryProgress){
+        var keys = Object.keys(saved.categoryProgress);
+        var doneN = keys.filter(function(k){ return saved.categoryProgress[k]; }).length;
+        if(doneN > 0){
+          statusText = Math.round((doneN/keys.length)*100) + "%";
+          statusClass = "badge-progress";
+          progressPct = Math.round((doneN/keys.length)*100);
+        }
       }
     }
+    
+    var card = document.createElement("div");
+    card.className = "module-card";
+    
+    card.innerHTML = 
+      '<div class="module-header" style="border-bottom-color:'+m.accent+';">' +
+      '<div class="module-num" style="color:'+m.accent+';">Module '+m.num+'</div>' +
+      '<h2 class="module-title">'+m.title+'</h2></div>' +
+      '<div class="module-body">' +
+      '<div class="progress-track"><div class="progress-fill" style="width:'+progressPct+'%; background:'+m.accent+';"></div></div>' +
+      '<span class="status-badge '+statusClass+'">'+statusText+'</span>' +
+      '</div>';
+    
+    card.addEventListener("click", function(){ window.location.href = m.id + ".html"; });
+    grid.appendChild(card);
+  });
+}
+
+renderCards();
+
+window.addEventListener("storage", function(e){
+  if(e.key && e.key.match(/^module-\d{2}_state$/)){
+    renderCards();
   }
-  
-  var card = document.createElement("div");
-  card.className = "module-card";
-  
-  card.innerHTML = 
-    '<div class="module-header" style="border-bottom-color:'+m.accent+';">' +
-    '<div class="module-num" style="color:'+m.accent+';">Module '+m.num+'</div>' +
-    '<h2 class="module-title">'+m.title+'</h2></div>' +
-    '<div class="module-body">' +
-    '<div class="progress-track"><div class="progress-fill" style="width:'+progressPct+'%; background:'+m.accent+';"></div></div>' +
-    '<span class="status-badge '+statusClass+'">'+statusText+'</span>' +
-    '</div>';
-  
-  card.addEventListener("click", function(){ window.location.href = m.id + ".html"; });
-  grid.appendChild(card);
 });
 
 var modal = document.getElementById("easterModal");
